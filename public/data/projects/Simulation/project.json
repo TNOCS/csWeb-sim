@@ -587,6 +587,18 @@
                     "gui" : {},
                     "tags" : []
                 }, {
+                    "id" : "communicationobjects",
+                    "title" : "Zendmasten",
+                    "type" : "dynamicgeojson",
+                    "renderType" : "geojson",
+                    "showFeatureNotifications" : true,
+                    "url" : "http://localhost:4567/api/layers/communicationobjects",
+                    "typeUrl" : "http://localhost:4567/api/resources/comm_objects",
+                    "opacity" : 90,
+                    "isDynamic" : true,
+                    "gui" : {},
+                    "tags" : []
+                }, {
                     "id" : "roadobjects",
                     "title" : "Wegen",
                     "type" : "dynamicgeojson",
@@ -605,19 +617,7 @@
             "title" : "Incidents",
             "clustering" : true,
             "clusterLevel" : 13,
-            "layers" : [{
-                    "id" : "communicationobjects",
-                    "title" : "Zendmasten",
-                    "type" : "dynamicgeojson",
-                    "renderType" : "geojson",
-                    "showFeatureNotifications" : true,
-                    "url" : "http://localhost:4567/api/layers/communicationobjects",
-                    "typeUrl" : "http://localhost:4567/api/resources/comm_objects",
-                    "opacity" : 90,
-                    "isDynamic" : true,
-                    "gui" : {},
-                    "tags" : []
-                }, {
+            "layers" : [ {
                     "id" : "hazardousobjects",
                     "title" : "Gevaarlijke objecten",
                     "type" : "dynamicgeojson",
@@ -647,11 +647,11 @@
             ]
         }, {
             "id" : "761231565-7f29-4fa7-05af-901a08bc4444",
-            "title" : "News",
+            "title" : "Nieuws",
             "clustering" : false,
             "layers" : [{
                     "id" : "news",
-                    "title" : "News",
+                    "title" : "Nieuws",
                     "type" : "geojson",
                     "renderType" : "geojson",
                     "showFeatureNotifications" : false,
@@ -663,7 +663,21 @@
                     "isDynamic" : false,
                     "gui" : {},
                     "tags" : []
-                }
+                }, {
+                    "id" : "gemeente",
+                    "title" : "Gemeentes",
+                    "type" : "geojson",
+                    "renderType" : "geojson",
+                    "showFeatureNotifications" : false,
+                    "url" : "data/src/gemeente.json",
+                    "typeUrl" : "data/resourceTypes/gemeente.json",
+                    "defaultFeatureType" : "gemeente",
+                    "opacity" : 70,
+                    "fitToMap" : false,
+                    "isDynamic" : false,
+                    "gui" : {},
+                    "tags" : []
+                }                
             ]
         }
     ]
