@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MapStacks xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wldelft.nl/fews/PI" xsi:schemaLocation="http://www.wldelft.nl/fews/PI http://fews.wldelft.nl/schemas/version1.0/pi-schemas/pi_mapstacks.xsd" version="1.2">
+    <geoDatum>Rijks Driehoekstelsel</geoDatum>
+    <timeZone>0.0</timeZone>
+    <mapStack>
+        <locationId>subgrid_rott_cita</locationId>
+        <parameterId>water_depth</parameterId>
+        <timeStep unit="minute" multiplier="10"/>
+        <startDate date="2007-11-08" time="00:00:00"/>
+        <endDate date="2007-11-10" time="02:00:00"/>
+        <file>
+            <ascii file="WaterDepth_nobreach????.???"/>
+        </file>
+    </mapStack>
+</MapStacks>
