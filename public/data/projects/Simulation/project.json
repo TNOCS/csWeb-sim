@@ -115,15 +115,7 @@
                                 },
                                 "url" : "/api/keys/sim.floodSimCmd",
                                 "message" : "{ \"scenario\": \"ijsselmonde\"}",
-                                "description" : "Start the Ijsselmonde flooding scenario provided by ..."
-                            }, {
-                                "name" : "Next event",
-                                "httpMethod" : {
-                                    "name" : "POST"
-                                },
-                                "description" : "Forward time to the next event.",
-                                "message" : "{ \"next\": true }",
-                                "url" : "/api/keys/Sim.NextEvent"
+                                "description" : "Start the IJsselmonde flooding scenario provided by ..."
                             }, { 
                                 "name" : "Start flooding Gorinchem",
                                 "httpMethod" : {
@@ -140,6 +132,14 @@
                                 "description" : "Forward time to the next event.",
                                 "message" : "{ \"next\": true }",
                                 "url" : "/api/keys/Sim.NextEvent"
+                            }, {
+                                "name" : "Probability flood IJsselmonde",
+                                "httpMethod" : {
+                                    "name" : "POST"
+                                },
+                                "url" : "/api/keys/sim.floodSimCmd",
+                                "message" : "{ \"scenario\": \"probability\"}",
+                                "description" : "Probability of a flood with water depth >15cm"
                             }, {
                                 "name" : "Release gas cloud",
                                 "httpMethod" : {
@@ -372,7 +372,7 @@
             "editMode" : false,
             "showMap" : true,
             "showTimeline" : true,
-            "showLeftmenu" : false,
+            "showLeftmenu" : true,
             "showLegend" : false,
             "showRightmenu" : true,
             "showBackgroundImage" : false,
@@ -397,8 +397,7 @@
                         "featureTypeName" : "*"
                     }
                 }
-            ],
-            "visiblelayers" : ["criticalobjects"]
+            ]
         }, {
             "id" : "datatable",
             "name" : "Table",
@@ -659,6 +658,19 @@
                     "typeUrl" : "data/resourceTypes/news.json",
                     "defaultFeatureType" : "news",
                     "opacity" : 99,
+                    "fitToMap" : false,
+                    "isDynamic" : false,
+                    "gui" : {},
+                    "tags" : []
+                }, {
+                    "id" : "dijken",
+                    "title" : "Dijken met zwakke plekken",
+                    "type" : "geojson",
+                    "renderType" : "geojson",
+                    "showFeatureNotifications" : false,
+                    "url" : "data/src/ijsselmonde_dijk.json",
+                    "typeUrl" : "data/resourceTypes/Dike.json",
+                    "opacity" : 95,
                     "fitToMap" : false,
                     "isDynamic" : false,
                     "gui" : {},
