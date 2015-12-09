@@ -4731,6 +4731,7 @@
                 "Name" : "Shell C3",
                 "featureTypeId" : "powerstation_{state}",
                 "_dep_water" : 0.8,
+                "_dep_features" : ["Shell Petroleumweg noord"],
                 "Description" : null
             },
             "geometry" : {

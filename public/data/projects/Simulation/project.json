@@ -116,7 +116,15 @@
                                 "url" : "/api/keys/sim.floodSimCmd",
                                 "message" : "{ \"scenario\": \"ijsselmonde\"}",
                                 "description" : "Start the IJsselmonde flooding scenario provided by ..."
-                            }, { 
+                            }, {
+                                "name" : "Start scenario P50_IJsselmonde",
+                                "httpMethod" : {
+                                    "name" : "POST"
+                                },
+                                "url" : "/api/keys/sim.floodSimCmd",
+                                "message" : "{ \"scenario\": \"ijsselmonde_p50\"}",
+                                "description" : "Start the IJsselmonde flooding scenario provided by ..."
+                            }, {
                                 "name" : "Start flooding Gorinchem",
                                 "httpMethod" : {
                                     "name" : "POST"
@@ -616,7 +624,7 @@
             "title" : "Incidents",
             "clustering" : true,
             "clusterLevel" : 13,
-            "layers" : [ {
+            "layers" : [{
                     "id" : "hazardousobjects",
                     "title" : "Gevaarlijke objecten",
                     "type" : "dynamicgeojson",
@@ -689,7 +697,77 @@
                     "isDynamic" : false,
                     "gui" : {},
                     "tags" : []
-                }                
+                }, {
+                    "id" : "floodsim_prob",
+                    "title" : "Overstromingswaarschijnlijkheid",
+                    "description" : "Overstromingswaarschijnlijkheid.",
+                    "type" : "grid",
+                    "renderType" : "gridlayer",
+                    "heatmapItems" : null,
+                    "url" : "http://localhost:4567/api/layers/floodsim",
+                    "typeUrl" : "http://localhost:4567/api/resources/floodsimtypes",
+                    "opacity" : 75,
+                    "dataSourceParameters" : {
+                        "propertyName" : "p",
+                        "gridType" : "esri",
+                        "projection" : "WGS84",
+                        "contourLevels" : [
+                            0,
+                            20,
+                            40,
+                            60,
+                            80,
+                            100
+                        ],
+                        "legend" : {
+                            "id" : "Kans",
+                            "visualAspect" : "fillColor",
+                            "description" : "Kans [%]",
+                            "legendKind" : "interpolated",
+                            "legendEntries" : [{
+                                    "label" : "0",
+                                    "value" : 0,
+                                    "color" : "#00ff00"
+                                }, {
+                                    "label" : "20",
+                                    "value" : 20,
+                                    "color" : "#44aa00"
+                                }, {
+                                    "label" : "40",
+                                    "value" : 40,
+                                    "color" : "#777700"
+                                }, {
+                                    "label" : "60",
+                                    "value" : 60,
+                                    "color" : "#aa5500"
+                                }, {
+                                    "label" : "80",
+                                    "value" : 80,
+                                    "color" : "#cc3300"
+                                }, {
+                                    "label" : "100",
+                                    "value" : 100,
+                                    "color" : "#ff0000"
+                                }
+                            ]
+                        },
+                        "skipLines" : 6,
+                        "columns" : 380,
+                        "rows" : 206,
+                        "deltaLon" : 0.0014584288488676631,
+                        "deltaLat" : -0.0008877224387042511,
+                        "noDataValue" : -9999,
+                        "startLon" : 4.624165116053319,
+                        "startLat" : 51.99900160775284,
+                        "maxThreshold" : 5.25,
+                        "minThreshold" : -9999
+                    },
+                    "defaultFeatureType" : "floodingprobability",
+                    "defaultLegendProperty" : "p",
+                    "isDynamic" : true,
+                    "gui" : {},
+                    "tags" : []
+                }
             ]
         }
     ]
