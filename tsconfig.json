@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noLib": false,
+    "sourceMap": true
+  },
+  "filesGlob": [
+    "./**/*.ts",
+    "!./node_modules/**/*.ts",
+    "!./node_modules/**/*.d.ts",
+    "!./dist/**/*.*",
+    "!./public/bower_components/**/*.d.ts"
+  ],
+  "files": [
+    "server.ts",
+    "CloudSim\\server.ts",
+    "CommunicationSim\\server.ts",
+    "CriticalObjectSim\\server.ts",
+    "ElectricalNetworkSim\\server.ts",
+    "FloodSim\\server.ts",
+    "HazardousObjectSim\\server.ts",
+    "RoadSim\\server.ts",
+    "SimulationManager\\server.ts",
+    "CloudSim\\src\\CloudSim.ts",
+    "CommunicationSim\\src\\CommunicationSim.ts",
+    "CriticalObjectSim\\src\\CriticalObjectSim.ts",
+    "ElectricalNetworkSim\\src\\ElectricalNetworkSim.ts",
+    "FloodSim\\src\\FloodSim.ts",
+    "HazardousObjectSim\\src\\HazardousObjectSim.ts",
+    "public\\app\\app.ts",
+    "public\\app\\m.ts",
+    "RoadSim\\src\\RoadSim.ts",
+    "SimulationManager\\src\\SimulationManager.ts",
+    "SimulationService\\api\\SimServiceManager.ts",
+    "SimulationService\\state\\typestate.ts",
+    "SimulationManager\\public\\app\\app.ts",
+    "SimulationManager\\public\\app\\m.ts"
+  ],
+  "exclude": []
+}
