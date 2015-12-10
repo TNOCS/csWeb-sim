@@ -5,22 +5,13 @@ import http = require('http');
 import path = require('path');
 import Winston = require('winston');
 
-import cc = require('./ServerComponents/dynamic/ClientConnection');
-import creator = require('./ServerComponents/creator/MapLayerFactory');
+import csweb = require('csweb');
 import ProjectRepositoryService = require('./ServerComponents/creator/ProjectRepositoryService');
 import DataSource = require('./ServerComponents/dynamic/DataSource');
-import MessageBus = require('./ServerComponents/bus/MessageBus');
-import BagDatabase = require('./ServerComponents/database/BagDatabase');
-import ConfigurationService = require('./ServerComponents/configuration/ConfigurationService');
-import DynamicProject = require('./ServerComponents/dynamic/DynamicProject');
 import LayerDirectory = require('./ServerComponents/dynamic/LayerDirectory');
 import store = require('./ServerComponents/import/Store');
 import ApiServiceManager = require('./ServerComponents/api/ApiServiceManager');
 import Api = require('./ServerComponents/api/ApiManager');
-import RestAPI = require('./ServerComponents/api/RestAPI');
-import MqttAPI = require('./ServerComponents/api/MqttAPI');
-import SocketIOAPI = require('./ServerComponents/api/SocketIOAPI');
-import FileStorage = require('./ServerComponents/api/FileStorage');
 import Utils = require('./ServerComponents/helpers/Utils');
 
 import FloodSim = require('./FloodSim/src/FloodSim');
@@ -46,9 +37,9 @@ var bodyParser = require('body-parser')
 var server = express();
 
 var httpServer = require('http').Server(server);
-var cm = new cc.ConnectionManager(httpServer);
-var messageBus = new MessageBus.MessageBusService();
-var config = new ConfigurationService.ConfigurationService('./configuration.json');
+var cm = new csweb.ConnectionManager(httpServer);
+var messageBus = new csweb.MessageBusService();
+var config = new csweb.ConfigurationService('./configuration.json');
 
 //This line is required when using JX to run the server, or else the input-messages coming from the Excel file will cause an error: https://github.com/jxcore/jxcore/issues/119
 //require('http').setMaxHeaderLength(26214400);
@@ -71,13 +62,13 @@ server.use(function(req, res, next) {
 
 config.add('server', 'http://localhost:' + port);
 
-var ld = new LayerDirectory.LayerDirectory(server, cm);
+var ld = new csweb.LayerDirectory(server, cm);
 ld.Start();
 
 //var pr = new DynamicProject.DynamicProjectService(server, cm, messageBus);
 //pr.Start(server);
 
-var ds = new DataSource.DataSourceService(cm, 'DataSource');
+var ds = new csweb.DataSourceService(cm, 'DataSource');
 ds.start();
 server.get('/datasource', ds.getDataSource);
 
@@ -86,7 +77,7 @@ server.use(express.static(path.join(__dirname, 'swagger')));
 // Create the API service manager and add the services that you need
 var apiServiceMgr = new ApiServiceManager(server, config);
 // Resource types
-var resourceTypeStore = new ProjectRepositoryService(new store.FolderStore({ storageFolder: 'public/data/resourceTypes' }));
+var resourceTypeStore = new csweb.ProjectRepositoryService(new csweb.FolderStore({ storageFolder: 'public/data/resourceTypes' }));
 apiServiceMgr.addService(resourceTypeStore);
 
 server.use(express.static(path.join(__dirname, 'public')));
@@ -100,7 +91,7 @@ var floodSim = new FloodSim.FloodSim('cs', 'FloodSim', false, <Api.IApiManagerOp
 });
 floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () => {
     // floodSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    floodSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    floodSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // floodSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './FloodSim/public/data/')), {});
     // floodSim.start();
 });
@@ -112,7 +103,7 @@ var cloudSim = new CloudSim.CloudSim('cs', 'CloudSim', false, <Api.IApiManagerOp
 });
 cloudSim.init(path.join(path.resolve(__dirname), './CloudSim/public/data'), () => {
     // cloudSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    cloudSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    cloudSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // cloudSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './CloudSim/public/data/')), {});
     // cloudSim.start();
 });
@@ -124,7 +115,7 @@ var communicationSim = new CommunicationSim.CommunicationSim('cs', 'Communicatio
 });
 communicationSim.init(path.join(path.resolve(__dirname), './CommunicationSim/public/data'), () => {
     // communicationSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    communicationSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    communicationSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // communicationSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './CommunicationSim/public/data/')), {});
     // communicationSim.start();
 });
@@ -136,7 +127,7 @@ var electricalNetworkSim = new ElectricalNetworkSim.ElectricalNetworkSim('cs', '
 });
 electricalNetworkSim.init(path.join(path.resolve(__dirname), './ElectricalNetworkSim/public/data'), () => {
     // electricalNetworkSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    electricalNetworkSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    electricalNetworkSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // electricalNetworkSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './ElectricalNetworkSim/public/data/')), {});
     // electricalNetworkSim.start('./SimulationData/Scenarios/Alblasserwaard/ElectricalNetworkSim/');
 });
@@ -148,7 +139,7 @@ var criticalObjectSim = new CriticalObjectSim.CriticalObjectSim('cs', 'CriticalO
 });
 criticalObjectSim.init(path.join(path.resolve(__dirname), './CriticalObjectSim/public/data'), () => {
     // criticalObjectSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    criticalObjectSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    criticalObjectSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // criticalObjectSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './CriticalObjectSim/public/data/')), {});
     // criticalObjectSim.start();
 });
@@ -160,7 +151,7 @@ var roadSim = new RoadSim.RoadSim('cs', 'RoadSim', false, <Api.IApiManagerOption
 });
 roadSim.init(path.join(path.resolve(__dirname), './RoadSim/public/data'), () => {
     // roadSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    roadSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    roadSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // roadSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './RoadSim/public/data/')), {});
     // roadSim.start();
 });
@@ -172,7 +163,7 @@ var hazardousObjectSim = new HazardousObjectSim.HazardousObjectSim('cs', 'Hazard
 });
 hazardousObjectSim.init(path.join(path.resolve(__dirname), './HazardousObjectSim/public/data'), () => {
     // hazardousObjectSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    hazardousObjectSim.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
+    hazardousObjectSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     // hazardousObjectSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './HazardousObjectSim/public/data/')), {});
     // hazardousObjectSim.start();
 });
@@ -195,10 +186,10 @@ var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,
             'cs/layers/roadobjects/feature/#', 'cs/layers/powerstations/feature/#', 'cs/layers/criticalobjects/feature/#', 'cs/layers/hazardousobjects/feature/#', 'cs/layers/communicationobjects/feature/#', 'cs/keys/#']
     });
 api.init(path.join(path.resolve(__dirname), 'public/data'), () => {
-    api.addConnector('rest', new RestAPI.RestAPI(server), {});
-    api.addConnector('socketio', new SocketIOAPI.SocketIOAPI(cm), {});
-    api.addConnector('mqtt', new MqttAPI.MqttAPI('localhost', 1883), {});
-    api.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), 'public/data/')), {});
+    api.addConnector('rest', new csweb.RestAPI(server), {});
+    api.addConnector('socketio', new csweb.SocketIOAPI(cm), {});
+    api.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
+    api.addConnector('file', new csweb.FileStorage(path.join(path.resolve(__dirname), 'public/data/')), {});
     api.start();
 });
 
