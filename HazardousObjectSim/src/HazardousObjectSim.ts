@@ -64,7 +64,7 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
                     // Update all features of the same featuretype
                     let dependencies = {};
                     Object.keys(f.properties).forEach((key) => {
-                        if (key.indexOf('_dep') === 0) {
+                        if (key === 'state' || key.indexOf('_dep') === 0) {
                             dependencies[key] = f.properties[key];
                         }
                     });

@@ -117,7 +117,7 @@
                                 "message" : "{ \"scenario\": \"ijsselmonde\"}",
                                 "description" : "Start the IJsselmonde flooding scenario provided by ..."
                             }, {
-                                "name" : "Start scenario P50_IJsselmonde",
+                                "name" : "Start flooding P50_IJsselmonde",
                                 "httpMethod" : {
                                     "name" : "POST"
                                 },
