@@ -1,10 +1,9 @@
 import path = require('path');
 import Winston = require('winston');
 import TypeState = require('../../SimulationService/state/typestate');
-import Api = require('../../ServerComponents/api/ApiManager');
+import csweb = require('csweb');
 import SimSvc = require('../../SimulationService/api/SimServiceManager');
 import HyperTimer = require('hypertimer');
-import Utils = require('../../ServerComponents/helpers/Utils');
 
 
 /** Defines the types of simulationservices available in a scenario */
@@ -44,7 +43,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
     public availableScenarios: { [key: string]: ISimScenario };
     public currentScenario: string;
 
-    constructor(namespace: string, name: string, public isClient = false, simServices: any, options = <Api.IApiManagerOptions>{}) {
+    constructor(namespace: string, name: string, public isClient = false, simServices: any, options = <csweb.IApiManagerOptions>{}) {
         super(namespace, name, isClient, options);
         this.availableScenarios = {};
         if (options) {
@@ -71,11 +70,11 @@ export class SimulationManager extends SimSvc.SimServiceManager {
     private scanScenarioFolders() {
         var count = 0;
         var scenariosFolder = path.join(this.simDataFolder, 'Scenarios');
-        var scenarios = Utils.getDirectories(scenariosFolder);
+        var scenarios = csweb.getDirectories(scenariosFolder);
         scenarios.forEach(scName => {
             var scenario: ISimScenario = <ISimScenario>{sims: []};
             var scenarioFolder = path.join(scenariosFolder, scName);
-            var types = Utils.getDirectories(scenarioFolder);
+            var types = csweb.getDirectories(scenarioFolder);
             types.forEach(type => {
                 var sim = {type: type, folder: path.join(scenarioFolder, type)};
                 scenario.sims.push(sim);
@@ -135,12 +134,12 @@ export class SimulationManager extends SimSvc.SimServiceManager {
         this.on('simSpeedChanged', () => this.startTimer());
 
         // Listen to JOBS
-        this.subscribeKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.Job]}`, <Api.ApiMeta>{}, (topic: string, message: any, meta?: Api.ApiMeta) => {
+        this.subscribeKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.Job]}`, <csweb.ApiMeta>{}, (topic: string, message: any, meta?: csweb.ApiMeta) => {
             Winston.info('Received job: ', message);
             if (message.hasOwnProperty('get')) {
                 switch (message['get'].toLowerCase()) {
                     case 'scenarios':
-                        this.updateKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.Job]}`, Object.keys(this.availableScenarios), <Api.ApiMeta>{}, () => {});
+                        this.updateKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.Job]}`, Object.keys(this.availableScenarios), <csweb.ApiMeta>{}, () => {});
                         break;
                     default:
                         Winston.info('Command ' + message['get'] + 'not found.');
@@ -155,7 +154,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
         });
 
         // Listen to Sim.SimState keys
-        this.subscribeKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.SimState]}`, <Api.ApiMeta>{}, (topic: string, message: string, params: Object) => {
+        this.subscribeKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.SimState]}`, <csweb.ApiMeta>{}, (topic: string, message: string, params: Object) => {
             if (message === null) return;
             try {
                 var simState: SimSvc.ISimState = (typeof message === 'object') ? message : JSON.parse(message);
@@ -185,7 +184,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
         });
 
         // Listen to NextEvent
-        this.subscribeKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.NextEvent]}`, <Api.ApiMeta>{}, (topic: string, message: string, params: Object) => {
+        this.subscribeKey(`${SimSvc.SimServiceManager.namespace}.${SimSvc.Keys[SimSvc.Keys.NextEvent]}`, <csweb.ApiMeta>{}, (topic: string, message: string, params: Object) => {
             if (message === null) return;
             try {
                 var msgObject = (typeof message === 'object') ? message : JSON.parse(message);
@@ -257,6 +256,6 @@ export class SimulationManager extends SimSvc.SimServiceManager {
      * @return {void}
      */
     private publishTime() {
-        this.updateKey(this.simTimeKey, this.timer.getTime().valueOf(), <Api.ApiMeta>{}, () => { });
+        this.updateKey(this.simTimeKey, this.timer.getTime().valueOf(), <csweb.ApiMeta>{}, () => { });
     }
 }

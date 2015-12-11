@@ -31,6 +31,7 @@
     "ElectricalNetworkSim\\src\\ElectricalNetworkSim.ts",
     "FloodSim\\src\\FloodSim.ts",
     "HazardousObjectSim\\src\\HazardousObjectSim.ts",
+    "Helpers\\DateUtils.ts",
     "public\\app\\app.ts",
     "public\\app\\m.ts",
     "RoadSim\\src\\RoadSim.ts",

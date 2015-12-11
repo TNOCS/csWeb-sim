@@ -2,12 +2,9 @@ import fs = require('fs');
 import path = require('path');
 import Winston = require('winston');
 import async = require('async');
-import GeoJSON = require('../../ServerComponents/helpers/GeoJSON')
-//import TypeState = require('../../ServerComponents/helpers/typestate')
-import Api = require('../../ServerComponents/api/ApiManager');
-import Utils = require('../../ServerComponents/Helpers/Utils');
+
+import csweb = require('csweb');
 import SimSvc = require('../../SimulationService/api/SimServiceManager');
-import Grid = require('../../ServerComponents/import/IsoLines');
 import _ = require('underscore');
 
 export interface ChartData {
@@ -25,16 +22,16 @@ export interface ChartData {
 export class CriticalObjectSim extends SimSvc.SimServiceManager {
     /** Relative folder for the original source files */
     private sourceFolder = '';
-    private criticalObjectsLayer: Api.ILayer;
-    private criticalObjects: Api.Feature[] = [];
+    private criticalObjectsLayer: csweb.ILayer;
+    private criticalObjects: csweb.Feature[] = [];
     private bedsChartData: ChartData[];
 
-    constructor(namespace: string, name: string, public isClient = false, public options: Api.IApiManagerOptions = <Api.IApiManagerOptions>{}) {
+    constructor(namespace: string, name: string, public isClient = false, public options: csweb.IApiManagerOptions = <csweb.IApiManagerOptions>{}) {
         super(namespace, name, isClient, options);
 
-        this.on(Api.Event[Api.Event.LayerChanged], (changed: Api.IChangeEvent) => {
+        this.on(csweb.Event[csweb.Event.LayerChanged], (changed: csweb.IChangeEvent) => {
             if (changed.id !== 'floodsim' || !changed.value) return;
-            var layer = <Api.ILayer>changed.value;
+            var layer = <csweb.ILayer>changed.value;
             if (!layer.data) return;
             Winston.info('COSim: Floodsim layer received');
             Winston.info(`ID  : ${changed.id}`);
@@ -42,23 +39,23 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
             this.flooding(layer);
         });
 
-        this.on(Api.Event[Api.Event.FeatureChanged], (changed: Api.IChangeEvent) => {
+        this.on(csweb.Event[csweb.Event.FeatureChanged], (changed: csweb.IChangeEvent) => {
             if (changed.id !== 'powerstations' || !changed.value) return;
-            var f = <Api.Feature>changed.value;
+            var f = <csweb.Feature>changed.value;
             Winston.info('COSim: Powerstations feature received');
             Winston.info(`ID  : ${changed.id}`);
             Winston.info(`Type: ${changed.type}`);
             this.blackout(f);
         });
 
-        this.on(Api.Event[Api.Event.FeatureChanged], (changed: Api.IChangeEvent) => {
+        this.on(csweb.Event[csweb.Event.FeatureChanged], (changed: csweb.IChangeEvent) => {
             if (!changed.id || !(changed.id === 'criticalobjects') || !changed.value) return;
             var updateAllFeatures = false;
             if (changed.value.hasOwnProperty('changeAllFeaturesOfType') && changed.value['changeAllFeaturesOfType'] === true) {
                 updateAllFeatures = true;
                 delete changed.value['changeAllFeaturesOfType'];
             }
-            var f = <Api.Feature>changed.value;
+            var f = <csweb.Feature>changed.value;
             if (!updateAllFeatures) {
                 // Update a single feature
                 var foundIndex = -1;
@@ -84,7 +81,7 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
                         });
                         if (co.id !== f.id) {
                             // Don't send update for the selectedFeature or it will loop forever...
-                            this.updateFeature(this.criticalObjectsLayer.id, co, <Api.ApiMeta>{}, () => { });
+                            this.updateFeature(this.criticalObjectsLayer.id, co, <csweb.ApiMeta>{}, () => { });
                         }
                     }
                 });
@@ -159,7 +156,7 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
         if (updateChart) this.sendChartValues();
     }
 
-    private blackout(f: Api.Feature) {
+    private blackout(f: csweb.Feature) {
         var failedObjects = this.checkBlackoutAreas(f);
         this.checkDependencies(failedObjects);
         this.sendChartValues(); // e.g., nr. of evacuated hospital beds.
@@ -206,10 +203,10 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
                 Winston.info(`Available beds: ${availableBeds}`);
             }
         })
-        this.updateKey("chart", { values: this.bedsChartData }, <Api.ApiMeta>{}, () => { });
+        this.updateKey("chart", { values: this.bedsChartData }, <csweb.ApiMeta>{}, () => { });
     }
 
-    private checkBlackoutAreas(f: Api.Feature) {
+    private checkBlackoutAreas(f: csweb.Feature) {
         // var totalBlackoutArea = this.concatenateBlackoutAreas(f);
         var totalBlackoutArea = f.geometry;
         var failedObjects: string[] = [];
@@ -244,8 +241,8 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
         return failedObjects;
     }
 
-    private concatenateBlackoutAreas(layer: Api.ILayer): Api.Geometry {
-        var totalArea: Api.Geometry = { type: "MultiPolygon", coordinates: [] };
+    private concatenateBlackoutAreas(layer: csweb.ILayer): csweb.Geometry {
+        var totalArea: csweb.Geometry = { type: "MultiPolygon", coordinates: [] };
         if (!layer || !layer.features) return totalArea;
         var count = 0;
         layer.features.forEach((f) => {
@@ -260,13 +257,13 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
         return totalArea;
     }
 
-    private flooding(layer: Api.ILayer) {
+    private flooding(layer: csweb.ILayer) {
         var failedObjects = this.checkWaterLevel(layer);
         this.checkDependencies(failedObjects);
         this.sendChartValues(); // e.g., nr. of evacuated hospital beds.
     }
 
-    private checkWaterLevel(layer: Api.ILayer) {
+    private checkWaterLevel(layer: csweb.ILayer) {
         var getWaterLevel = this.convertLayerToGrid(layer);
         var failedObjects: string[] = [];
 
@@ -319,10 +316,10 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
         if (additionalFailures) this.checkDependencies(failedObjects);
     }
 
-    private convertLayerToGrid(layer: Api.ILayer) {
-        var gridParams = <Grid.IGridDataSourceParameters>{};
-        Grid.IsoLines.convertEsriHeaderToGridParams(layer, gridParams);
-        var gridData = Grid.IsoLines.convertDataToGrid(layer, gridParams);
+    private convertLayerToGrid(layer: csweb.ILayer) {
+        var gridParams = <csweb.IGridDataSourceParameters>{};
+        csweb.IsoLines.convertEsriHeaderToGridParams(layer, gridParams);
+        var gridData = csweb.IsoLines.convertDataToGrid(layer, gridParams);
 
         return function getWaterLevel(pt: number[]): number {
             var col = Math.floor((pt[0] - gridParams.startLon) / gridParams.deltaLon);
@@ -342,7 +339,7 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
         this.criticalObjects = [];
         this.bedsChartData = [{ name: "available", values: [] }, { name: "failed", values: [] }, { name: "stressed", values: [] }];
         this.nextEvent = null;
-        // Copy original GeoJSON layers to dynamic layers
+        // Copy original csweb layers to dynamic layers
         var objectsFile = path.join(this.sourceFolder, 'critical_objects.json');
         fs.readFile(objectsFile, (err, data) => {
             if (err) {
@@ -352,7 +349,7 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
             let co = JSON.parse(data.toString());
             this.criticalObjectsLayer = this.createNewLayer('criticalobjects', 'Kwetsbare objecten', co.features);
             this.criticalObjectsLayer.features.forEach(f => {
-                if (!f.id) f.id = Utils.newGuid();
+                if (!f.id) f.id = csweb.newGuid();
                 if (f.geometry.type !== 'Point') return;
                 this.setFeatureState(f, SimSvc.InfrastructureState.Ok);
                 this.criticalObjects.push(f);
@@ -366,21 +363,21 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
     }
 
     /** Set the state and failure mode of a feature, optionally publishing it too. */
-    private setFeatureState(feature: Api.Feature, state: SimSvc.InfrastructureState, failureMode: SimSvc.FailureMode = SimSvc.FailureMode.None, failureTime: Date = null, publish: boolean = false) {
+    private setFeatureState(feature: csweb.Feature, state: SimSvc.InfrastructureState, failureMode: SimSvc.FailureMode = SimSvc.FailureMode.None, failureTime: Date = null, publish: boolean = false) {
         feature.properties['state'] = state;
         feature.properties['failureMode'] = failureMode;
         if (failureTime) feature.properties['willFailAt'] = failureTime.getTime();
         if (!publish) return;
         // Publish feature update
-        this.updateFeature(this.criticalObjectsLayer.id, feature, <Api.ApiMeta>{}, () => { });
+        this.updateFeature(this.criticalObjectsLayer.id, feature, <csweb.ApiMeta>{}, () => { });
     }
 
-    private getFeatureState(feature: Api.Feature) {
+    private getFeatureState(feature: csweb.Feature) {
         return <SimSvc.InfrastructureState>feature.properties['state'];
     }
 
-    private createNewLayer(id: string, title: string, features: Api.Feature[], description?: string) {
-        var layer: Api.ILayer = {
+    private createNewLayer(id: string, title: string, features: csweb.Feature[], description?: string) {
+        var layer: csweb.ILayer = {
             server: this.options.server,
             id: id,
             title: title,
@@ -398,8 +395,8 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
     /**
      * Create and publish the layer.
      */
-    private publishLayer(layer: Api.ILayer) {
-        this.addUpdateLayer(layer, <Api.ApiMeta>{}, () => { });
+    private publishLayer(layer: csweb.ILayer) {
+        this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
     }
 
     /**

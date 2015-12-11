@@ -1,4 +1,4 @@
-require('./ServerComponents/helpers/DateUtils');
+require('./Helpers/DateUtils');
 
 import express = require('express');
 import http = require('http');
@@ -6,13 +6,6 @@ import path = require('path');
 import Winston = require('winston');
 
 import csweb = require('csweb');
-import ProjectRepositoryService = require('./ServerComponents/creator/ProjectRepositoryService');
-import DataSource = require('./ServerComponents/dynamic/DataSource');
-import LayerDirectory = require('./ServerComponents/dynamic/LayerDirectory');
-import store = require('./ServerComponents/import/Store');
-import ApiServiceManager = require('./ServerComponents/api/ApiServiceManager');
-import Api = require('./ServerComponents/api/ApiManager');
-import Utils = require('./ServerComponents/helpers/Utils');
 
 import FloodSim = require('./FloodSim/src/FloodSim');
 import CloudSim = require('./CloudSim/src/CloudSim');
@@ -62,20 +55,20 @@ server.use(function(req, res, next) {
 
 config.add('server', 'http://localhost:' + port);
 
-var ld = new csweb.LayerDirectory(server, cm);
+var ld = new csweb.LayerDirectory.LayerDirectory(server, cm);
 ld.Start();
 
 //var pr = new DynamicProject.DynamicProjectService(server, cm, messageBus);
 //pr.Start(server);
 
-var ds = new csweb.DataSourceService(cm, 'DataSource');
+var ds = new csweb.DataSource.DataSourceService(cm, 'DataSource');
 ds.start();
 server.get('/datasource', ds.getDataSource);
 
 server.use(express.static(path.join(__dirname, 'swagger')));
 
 // Create the API service manager and add the services that you need
-var apiServiceMgr = new ApiServiceManager(server, config);
+var apiServiceMgr = new csweb.ApiServiceManager(server, config);
 // Resource types
 var resourceTypeStore = new csweb.ProjectRepositoryService(new csweb.FolderStore({ storageFolder: 'public/data/resourceTypes' }));
 apiServiceMgr.addService(resourceTypeStore);
@@ -85,8 +78,8 @@ server.use(express.static(path.join(__dirname, 'public')));
 var prefix = SimSvc.SimServiceManager.namespace;
 
 /** Start FloodSim server */
-var floodSim = new FloodSim.FloodSim('cs', 'FloodSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress() }:${port}`,
+var floodSim = new FloodSim.FloodSim('cs', 'FloodSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress() }:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/keys/sim/floodSimCmd']
 });
 floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () => {
@@ -97,8 +90,8 @@ floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () =
 });
 
 /** Start CloudSim server */
-var cloudSim = new CloudSim.CloudSim('cs', 'CloudSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress() }:${port}`,
+var cloudSim = new CloudSim.CloudSim('cs', 'CloudSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress() }:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/keys/sim/cloudSimCmd']
 });
 cloudSim.init(path.join(path.resolve(__dirname), './CloudSim/public/data'), () => {
@@ -109,8 +102,8 @@ cloudSim.init(path.join(path.resolve(__dirname), './CloudSim/public/data'), () =
 });
 
 /** Start CommunicationSim server */
-var communicationSim = new CommunicationSim.CommunicationSim('cs', 'CommunicationSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress() }:${port}`,
+var communicationSim = new CommunicationSim.CommunicationSim('cs', 'CommunicationSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress() }:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#', 'cs/layers/communicationobjects/feature/#']
 });
 communicationSim.init(path.join(path.resolve(__dirname), './CommunicationSim/public/data'), () => {
@@ -121,8 +114,8 @@ communicationSim.init(path.join(path.resolve(__dirname), './CommunicationSim/pub
 });
 
 /** Start ElectricalNetworkSim server */
-var electricalNetworkSim = new ElectricalNetworkSim.ElectricalNetworkSim('cs', 'ElectricalNetworkSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress() }:${port}`,
+var electricalNetworkSim = new ElectricalNetworkSim.ElectricalNetworkSim('cs', 'ElectricalNetworkSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress() }:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#']
 });
 electricalNetworkSim.init(path.join(path.resolve(__dirname), './ElectricalNetworkSim/public/data'), () => {
@@ -133,8 +126,8 @@ electricalNetworkSim.init(path.join(path.resolve(__dirname), './ElectricalNetwor
 });
 
 /** Start CriticalObjectSim server */
-var criticalObjectSim = new CriticalObjectSim.CriticalObjectSim('cs', 'CriticalObjectSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress()}:${port}`,
+var criticalObjectSim = new CriticalObjectSim.CriticalObjectSim('cs', 'CriticalObjectSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress()}:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#', 'cs/layers/criticalobjects/feature/#']
 });
 criticalObjectSim.init(path.join(path.resolve(__dirname), './CriticalObjectSim/public/data'), () => {
@@ -145,8 +138,8 @@ criticalObjectSim.init(path.join(path.resolve(__dirname), './CriticalObjectSim/p
 });
 
 /** Start RoadSim server */
-var roadSim = new RoadSim.RoadSim('cs', 'RoadSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress()}:${port}`,
+var roadSim = new RoadSim.RoadSim('cs', 'RoadSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress()}:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#', 'cs/layers/roadobjects/feature/#']
 });
 roadSim.init(path.join(path.resolve(__dirname), './RoadSim/public/data'), () => {
@@ -157,8 +150,8 @@ roadSim.init(path.join(path.resolve(__dirname), './RoadSim/public/data'), () => 
 });
 
 /** Start HazardousObjectSim server */
-var hazardousObjectSim = new HazardousObjectSim.HazardousObjectSim('cs', 'HazardousObjectSim', false, <Api.IApiManagerOptions>{
-    server: `${Utils.getIPAddress()}:${port}`,
+var hazardousObjectSim = new HazardousObjectSim.HazardousObjectSim('cs', 'HazardousObjectSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress()}:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#']
 });
 hazardousObjectSim.init(path.join(path.resolve(__dirname), './HazardousObjectSim/public/data'), () => {
@@ -180,7 +173,7 @@ var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,
         'GasCloud': cloudSim
     },
     {
-        server: `${Utils.getIPAddress() }:${port}`,
+        server: `${csweb.getIPAddress() }:${port}`,
         simDataFolder: 'SimulationData/',
         mqttSubscriptions: ['cs/layers/communicationobjects', 'cs/layers/roadobjects', 'cs/layers/floodsim', 'cs/layers/cloudsim', 'cs/layers/powerstations', 'cs/layers/hazardousobjects', 'cs/layers/criticalobjects',
             'cs/layers/roadobjects/feature/#', 'cs/layers/powerstations/feature/#', 'cs/layers/criticalobjects/feature/#', 'cs/layers/hazardousobjects/feature/#', 'cs/layers/communicationobjects/feature/#', 'cs/keys/#']

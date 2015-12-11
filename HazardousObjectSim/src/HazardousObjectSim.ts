@@ -2,12 +2,10 @@ import fs = require('fs');
 import path = require('path');
 import Winston = require('winston');
 import async = require('async');
-import GeoJSON = require('../../ServerComponents/helpers/GeoJSON')
-//import TypeState = require('../../ServerComponents/helpers/typestate')
-import Api = require('../../ServerComponents/api/ApiManager');
-import Utils = require('../../ServerComponents/Helpers/Utils');
+
+import csweb = require('csweb');
+
 import SimSvc = require('../../SimulationService/api/SimServiceManager');
-import Grid = require('../../ServerComponents/import/IsoLines');
 import _ = require('underscore');
 
 /**
@@ -20,16 +18,16 @@ import _ = require('underscore');
 export class HazardousObjectSim extends SimSvc.SimServiceManager {
     /** Source folder for the original source files */
     private sourceFolder = '';
-    private hazardousObjectsLayer: Api.ILayer;
-    private hazardousObjects: Api.Feature[] = [];
+    private hazardousObjectsLayer: csweb.ILayer;
+    private hazardousObjects: csweb.Feature[] = [];
     private upcomingEventTime: number; // milliseconds
 
-    constructor(namespace: string, name: string, public isClient = false, public options: Api.IApiManagerOptions = <Api.IApiManagerOptions>{}) {
+    constructor(namespace: string, name: string, public isClient = false, public options: csweb.IApiManagerOptions = <csweb.IApiManagerOptions>{}) {
         super(namespace, name, isClient, options);
 
-        this.on(Api.Event[Api.Event.LayerChanged], (changed: Api.IChangeEvent) => {
+        this.on(csweb.Event[csweb.Event.LayerChanged], (changed: csweb.IChangeEvent) => {
             if (changed.id !== 'floodsim' || !changed.value) return;
-            var layer = <Api.ILayer>changed.value;
+            var layer = <csweb.ILayer>changed.value;
             if (!layer.data) return;
             Winston.info('HOSim: Floodsim layer received');
             Winston.info(`ID  : ${changed.id}`);
@@ -37,10 +35,10 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
             this.flooding(layer);
         });
 
-        this.on(Api.Event[Api.Event.FeatureChanged], (changed: Api.IChangeEvent) => {
+        this.on(csweb.Event[csweb.Event.FeatureChanged], (changed: csweb.IChangeEvent) => {
             if (!changed.id || !(changed.id === 'powerstations') || !(changed.id === 'hazardousobjects') || !changed.value) return;
             if (changed.id === 'powerstations') {
-                var f = <Api.Feature>changed.value;
+                var f = <csweb.Feature>changed.value;
                 Winston.info('HOSim: Powerstations feature received');
                 this.blackout(f);
             } else if (changed.id === 'hazardousobjects') {
@@ -49,7 +47,7 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
                     updateAllFeatures = true;
                     delete changed.value['changeAllFeaturesOfType'];
                 }
-                var f = <Api.Feature>changed.value;
+                var f = <csweb.Feature>changed.value;
                 if (!updateAllFeatures) {
                     // Update a single feature
                     var foundIndex = -1;
@@ -75,7 +73,7 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
                             });
                             if (ho.id !== f.id) {
                                 // Don't send update for the selectedFeature or it will loop forever...
-                                this.updateFeature(this.hazardousObjectsLayer.id, ho, <Api.ApiMeta>{}, () => { });
+                                this.updateFeature(this.hazardousObjectsLayer.id, ho, <csweb.ApiMeta>{}, () => { });
                             }
                         }
                     });
@@ -112,11 +110,11 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
         });
     }
 
-    private blackout(f: Api.Feature) {
+    private blackout(f: csweb.Feature) {
         var failedObjects = this.checkBlackoutAreas(f);
     }
 
-    private checkBlackoutAreas(f: Api.Feature) {
+    private checkBlackoutAreas(f: csweb.Feature) {
         // var totalBlackoutArea = this.concatenateBlackoutAreas(f);
         var totalBlackoutArea = f.geometry;
         var failedObjects: string[] = [];
@@ -139,8 +137,8 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
         return failedObjects;
     }
 
-    private concatenateBlackoutAreas(layer: Api.ILayer): Api.Geometry {
-        var totalArea: Api.Geometry = { type: "MultiPolygon", coordinates: [] };
+    private concatenateBlackoutAreas(layer: csweb.ILayer): csweb.Geometry {
+        var totalArea: csweb.Geometry = { type: "MultiPolygon", coordinates: [] };
         if (!layer || !layer.features) return totalArea;
         var count = 0;
         layer.features.forEach((f) => {
@@ -155,11 +153,11 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
         return totalArea;
     }
 
-    private flooding(layer: Api.ILayer) {
+    private flooding(layer: csweb.ILayer) {
         var failedObjects = this.checkWaterLevel(layer);
     }
 
-    private checkWaterLevel(layer: Api.ILayer) {
+    private checkWaterLevel(layer: csweb.ILayer) {
         var getWaterLevel = this.convertLayerToGrid(layer);
         var failedObjects: string[] = [];
 
@@ -193,10 +191,10 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
         return failedObjects;
     }
 
-    private convertLayerToGrid(layer: Api.ILayer) {
-        var gridParams = <Grid.IGridDataSourceParameters>{};
-        Grid.IsoLines.convertEsriHeaderToGridParams(layer, gridParams);
-        var gridData = Grid.IsoLines.convertDataToGrid(layer, gridParams);
+    private convertLayerToGrid(layer: csweb.ILayer) {
+        var gridParams = <csweb.IGridDataSourceParameters>{};
+        csweb.IsoLines.convertEsriHeaderToGridParams(layer, gridParams);
+        var gridData = csweb.IsoLines.convertDataToGrid(layer, gridParams);
 
         return function getWaterLevel(pt: number[]): number {
             var col = Math.floor((pt[0] - gridParams.startLon) / gridParams.deltaLon);
@@ -224,7 +222,7 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
             let ho = JSON.parse(data.toString());
             this.hazardousObjectsLayer = this.createNewLayer('hazardousobjects', 'Gevaarlijke objecten', ho.features);
             this.hazardousObjectsLayer.features.forEach(f => {
-                if (!f.id) f.id = Utils.newGuid();
+                if (!f.id) f.id = csweb.newGuid();
                 if (f.geometry.type !== 'Point') return;
                 this.setFeatureState(f, SimSvc.InfrastructureState.Ok);
                 this.hazardousObjects.push(f);
@@ -237,31 +235,31 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
     }
 
     /** Set the state and failure mode of a feature, optionally publishing it too. */
-    private setFeatureState(feature: Api.Feature, state: SimSvc.InfrastructureState, failureMode: SimSvc.FailureMode = SimSvc.FailureMode.None, publish: boolean = false) {
+    private setFeatureState(feature: csweb.Feature, state: SimSvc.InfrastructureState, failureMode: SimSvc.FailureMode = SimSvc.FailureMode.None, publish: boolean = false) {
         feature.properties['state'] = state;
         feature.properties['failureMode'] = failureMode;
         if (!publish) return;
         // Publish feature update
-        this.updateFeature(this.hazardousObjectsLayer.id, feature, <Api.ApiMeta>{}, () => { });
+        this.updateFeature(this.hazardousObjectsLayer.id, feature, <csweb.ApiMeta>{}, () => { });
         // Publish PowerSupplyArea layer
         // if (state === SimSvc.InfrastructureState.Failed && feature.properties.hasOwnProperty('contour')) {
-        //     var contour = new Api.Feature();
-        //     contour.id = Utils.newGuid();
+        //     var contour = new csweb.Feature();
+        //     contour.id = csweb.newGuid();
         //     contour.properties = {
         //         name: 'Contour area',
         //         featureTypeId: 'AffectedArea'
         //     };
         //     contour.geometry = JSON.parse(feature.properties['contour']);
-        //     this.addFeature(this.hazardousObjectsLayer.id, contour, <Api.ApiMeta>{}, () => { });
+        //     this.addFeature(this.hazardousObjectsLayer.id, contour, <csweb.ApiMeta>{}, () => { });
         // }
     }
 
-    private getFeatureState(feature: Api.Feature) {
+    private getFeatureState(feature: csweb.Feature) {
         return <SimSvc.InfrastructureState>feature.properties['state'];
     }
 
-    private createNewLayer(id: string, title: string, features: Api.Feature[], description?: string) {
-        var layer: Api.ILayer = {
+    private createNewLayer(id: string, title: string, features: csweb.Feature[], description?: string) {
+        var layer: csweb.ILayer = {
             server: this.options.server,
             id: id,
             title: title,
@@ -279,8 +277,8 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
     /**
      * Create and publish the layer.
      */
-    private publishLayer(layer: Api.ILayer) {
-        this.addUpdateLayer(layer, <Api.ApiMeta>{}, () => { });
+    private publishLayer(layer: csweb.ILayer) {
+        this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
     }
 
     /**

@@ -2,8 +2,8 @@ import fs = require('fs');
 import path = require('path');
 import Winston = require('winston');
 import TypeState = require('../state/typestate');
-import Api = require('../../ServerComponents/api/ApiManager');
-import Utils = require('../../ServerComponents/helpers/Utils');
+
+import csweb = require('csweb');
 
 export enum SimCommand {
     Start,
@@ -69,7 +69,7 @@ export interface ISimTimeState {
     simCmd?: string;
 }
 
-// /** Additional events that are emitted, besides the Api.Event */
+// /** Additional events that are emitted, besides the csweb.Event */
 // export enum Event {
 //     TimeChanged,
 //     StateChanged
@@ -99,10 +99,10 @@ export interface ISimState {
  * Base class for a simulation service. It is not intended to run directly, but only adds time management
  * functionality to the ApiManager.
  */
-export class SimServiceManager extends Api.ApiManager {
+export class SimServiceManager extends csweb.ApiManager {
     /** Namespace for the simulation keys, e.g. /Sim/KEYS */
     static namespace: string = 'Sim';
-    id: string = Utils.newGuid();
+    id: string = csweb.newGuid();
     /** Optional message to transmit with the state object */
     public message: string;
     /** Date in ms of when the next event will occur */
@@ -117,7 +117,7 @@ export class SimServiceManager extends Api.ApiManager {
     public simCmd: SimCommand;
     public simStartTime: Date;
 
-    constructor(namespace: string, name: string, public isClient = false, public options: Api.IApiManagerOptions = <Api.IApiManagerOptions>{}) {
+    constructor(namespace: string, name: string, public isClient = false, public options: csweb.IApiManagerOptions = <csweb.IApiManagerOptions>{}) {
         super(namespace, name, isClient, options);
         this.simTime = new Date();
         this.simStartTime = new Date();
@@ -147,7 +147,7 @@ export class SimServiceManager extends Api.ApiManager {
             return true;
         });
 
-        this.on(Api.Event[Api.Event.KeyChanged], (key: Api.IChangeEvent) => {
+        this.on(csweb.Event[csweb.Event.KeyChanged], (key: csweb.IChangeEvent) => {
             if (!key.value.hasOwnProperty('type')) return;
             switch (key.value['type']) {
                 case 'simTime':
@@ -159,7 +159,7 @@ export class SimServiceManager extends Api.ApiManager {
         });
 
         // Listen to SimTime keys
-        this.subscribeKey(`${SimServiceManager.namespace}.${Keys[Keys.SimTime]}`, <Api.ApiMeta>{}, (topic: string, message: any, meta?: Api.ApiMeta) => {
+        this.subscribeKey(`${SimServiceManager.namespace}.${Keys[Keys.SimTime]}`, <csweb.ApiMeta>{}, (topic: string, message: any, meta?: csweb.ApiMeta) => {
             this.updateSimulationState(message);
         });
 
@@ -183,7 +183,7 @@ export class SimServiceManager extends Api.ApiManager {
      * Override the start method to specify your own startup behaviour.
      * Although you could use the init method, at that time the connectors haven't been configured yet.
      */
-    public start() {
+    public start(sourceFolder?: string) {
         null;
     }
 
@@ -203,7 +203,7 @@ export class SimServiceManager extends Api.ApiManager {
         state['pid'] = process.pid;
         state['mem'] = process.memoryUsage();
         Winston.debug(`Next event: ${state.nextEvent}`);
-        this.updateKey(`${SimServiceManager.namespace}.${Keys[Keys.SimState]}.${this.name}`, state, <Api.ApiMeta>{}, () => { });
+        this.updateKey(`${SimServiceManager.namespace}.${Keys[Keys.SimState]}.${this.name}`, state, <csweb.ApiMeta>{}, () => { });
     }
 
     /** Delete all files in the folder */

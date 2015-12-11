@@ -2,10 +2,9 @@ import fs = require('fs');
 import path = require('path');
 import Winston = require('winston');
 import async = require('async');
-import GeoJSON = require('../../ServerComponents/helpers/GeoJSON')
-import Utils = require('../../ServerComponents/helpers/Utils')
-import IsoLines = require('../../ServerComponents/import/IsoLines')
-import Api = require('../../ServerComponents/api/ApiManager');
+
+import csweb = require('csweb');
+
 import TypeState = require('../../SimulationService/state/typestate');
 import SimSvc = require('../../SimulationService/api/SimServiceManager');
 import _ = require('underscore');
@@ -41,7 +40,7 @@ export class FloodSim extends SimSvc.SimServiceManager {
             /** The time in minutes since the start of the simulation */
             timeStamp: number,
             /** The reference to the flooding data: the actual data still needs to be loaded */
-            layer: Api.ILayer
+            layer: csweb.ILayer
         }[]
     } = {};
     /** The published flooding scenario, time and layer */
@@ -50,13 +49,13 @@ export class FloodSim extends SimSvc.SimServiceManager {
         timeStamp: number,
         /** Time that the flooding started */
         startTime: Date,
-        layer: Api.ILayer
+        layer: csweb.ILayer
     };
 
-    constructor(namespace: string, name: string, public isClient = false, public options: Api.IApiManagerOptions = <Api.IApiManagerOptions>{}) {
+    constructor(namespace: string, name: string, public isClient = false, public options: csweb.IApiManagerOptions = <csweb.IApiManagerOptions>{}) {
         super(namespace, name, isClient, options);
 
-        this.subscribeKey('sim.floodSimCmd', <Api.ApiMeta>{}, (topic: string, message: string, params: Object) => {
+        this.subscribeKey('sim.floodSimCmd', <csweb.ApiMeta>{}, (topic: string, message: string, params: Object) => {
             Winston.info(`Topic: ${topic}, Msg: ${JSON.stringify(message, null, 2) }, Params: ${params ? JSON.stringify(params, null, 2) : '-'}.`)
             if (message.hasOwnProperty('scenario')) this.startScenario(message['scenario']);
             if (message.hasOwnProperty('next')) this.publishNextFloodLayer(Number.MAX_VALUE);
@@ -118,11 +117,11 @@ export class FloodSim extends SimSvc.SimServiceManager {
             startTime: null,
             layer: layer
         }
-        this.addUpdateLayer(layer, <Api.ApiMeta>{}, () => { });
+        this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
     }
 
     private createNewFloodLayer(file: string, description?: string) {
-        var layer: Api.ILayer = {
+        var layer: csweb.ILayer = {
             server: this.options.server,
             id: 'FloodSim',
             title: 'Flooding',
@@ -136,7 +135,7 @@ export class FloodSim extends SimSvc.SimServiceManager {
             typeUrl: `${this.options.server}/api/resources/floodsimtypes`,
             type: 'grid',
             renderType: 'gridlayer',
-            dataSourceParameters: <IsoLines.IGridDataSourceParameters>{
+            dataSourceParameters: <csweb.IGridDataSourceParameters>{
                 propertyName: 'h',
                 gridType: 'esri',
                 projection: 'WGS84',
@@ -159,7 +158,7 @@ export class FloodSim extends SimSvc.SimServiceManager {
         if (!fs.existsSync(this.scenarioFolder)) return;
 
         // Start loading all data
-        var scenarios = Utils.getDirectories(this.scenarioFolder);
+        var scenarios = csweb.getDirectories(this.scenarioFolder);
         scenarios.forEach(scenario => {
             var scenarioFolder = path.join(this.scenarioFolder, scenario);
             var files = fs.readdirSync(scenarioFolder);
@@ -245,11 +244,11 @@ export class FloodSim extends SimSvc.SimServiceManager {
      * Update the published flood layer with new data.
      */
     private updateFloodLayer(timeStamp: number, data: string) {
-        var layer: Api.ILayer = _.clone(this.pubFloodingScenario.layer);
+        var layer: csweb.ILayer = _.clone(this.pubFloodingScenario.layer);
         layer.data = data;
         layer.url = '';
         this.pubFloodingScenario.timeStamp = timeStamp;
-        this.addUpdateLayer(layer, <Api.ApiMeta>{}, () => { });
+        this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
     }
 
     private extractTimeStamp(filename: string) {
