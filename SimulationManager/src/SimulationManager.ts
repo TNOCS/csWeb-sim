@@ -100,7 +100,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
                 Winston.warn('SimService ' + sim.type + ' not found.');
                 return;
             }
-            this.simServices[sim.type].start(path.join(__dirname, '../../', sim.folder));
+            this.simServices[sim.type].start(path.join(sim.folder));
             Winston.info('Started ' + sim.type +  ' with folder: ' + sim.folder);
         });
         this.currentScenario = scenarioName;
