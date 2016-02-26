@@ -32,7 +32,7 @@ var server = express();
 var httpServer = require('http').Server(server);
 var cm = new csweb.ConnectionManager(httpServer);
 var messageBus = new csweb.MessageBusService();
-var config = new csweb.ConfigurationService('./configuration.json');
+var config = new csweb.ConfigurationService();
 
 //This line is required when using JX to run the server, or else the input-messages coming from the Excel file will cause an error: https://github.com/jxcore/jxcore/issues/119
 //require('http').setMaxHeaderLength(26214400);
