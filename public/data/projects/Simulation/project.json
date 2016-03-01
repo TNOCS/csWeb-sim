@@ -46,6 +46,14 @@
                     "data" : {
                         "smallSize" : false,
                         "messages" : [{
+                                "name" : "Start scenario Den Haag",
+                                "httpMethod" : {
+                                    "name" : "POST"
+                                },
+                                "url" : "/api/keys/Sim.Job",
+                                "message" : "{ \"start\": \"den haag\"}",
+                                "description" : "Start scenario"
+                            }, {
                                 "name" : "Start scenario IJsselmonde",
                                 "httpMethod" : {
                                     "name" : "POST"
