@@ -11,6 +11,7 @@ import FloodSim = require('./FloodSim/src/FloodSim');
 import CloudSim = require('./CloudSim/src/CloudSim');
 import ElectricalNetworkSim = require('./ElectricalNetworkSim/src/ElectricalNetworkSim');
 import CommunicationSim = require('./CommunicationSim/src/CommunicationSim');
+import CellCoverageSim = require('./CellCoverageSim/src/CellCoverageSim');
 import CriticalObjectSim = require('./CriticalObjectSim/src/CriticalObjectSim');
 import RoadSim = require('./RoadSim/src/RoadSim');
 import HazardousObjectSim = require('./HazardousObjectSim/src/HazardousObjectSim');
@@ -161,12 +162,21 @@ hazardousObjectSim.init(path.join(path.resolve(__dirname), './HazardousObjectSim
     // hazardousObjectSim.start();
 });
 
+/** Start CellCoverage server */
+var cellCoverageSim = new CellCoverageSim.CellCoverageSim('cs', 'CellCoverageSim', false, <csweb.IApiManagerOptions>{
+    server: `${csweb.getIPAddress()}:${port}`,
+    mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/communicationobjects/feature/#','cs/layers/communicationobjects']
+});
+cellCoverageSim.init(path.join(path.resolve(__dirname), './CellCoverageSim/public/data'), () => {
+    cellCoverageSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
+});
 
 var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,
     {
-        'ElectricalNetwork': electricalNetworkSim,
         'Communication': communicationSim,
+        'CellCoverage': cellCoverageSim,
         'Flooding': floodSim,
+        'ElectricalNetwork': electricalNetworkSim,
         'CriticalObjects': criticalObjectSim,
         'HazardousObjects': hazardousObjectSim,
         'Roads': roadSim,
@@ -174,8 +184,8 @@ var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,
     },
     {
         server: `${csweb.getIPAddress() }:${port}`,
-        simDataFolder: 'SimulationData/',
-        mqttSubscriptions: ['cs/layers/communicationobjects', 'cs/layers/roadobjects', 'cs/layers/floodsim', 'cs/layers/cloudsim', 'cs/layers/powerstations', 'cs/layers/hazardousobjects', 'cs/layers/criticalobjects',
+        simDataFolder: 'SimulationData',
+        mqttSubscriptions: ['cs/layers/communicationobjects', 'cs/layers/cellcoverage', 'cs/layers/roadobjects', 'cs/layers/floodsim', 'cs/layers/cloudsim', 'cs/layers/powerstations', 'cs/layers/hazardousobjects', 'cs/layers/criticalobjects',
             'cs/layers/roadobjects/feature/#', 'cs/layers/powerstations/feature/#', 'cs/layers/criticalobjects/feature/#', 'cs/layers/hazardousobjects/feature/#', 'cs/layers/communicationobjects/feature/#', 'cs/keys/#']
     });
 api.init(path.join(path.resolve(__dirname), 'public/data'), () => {

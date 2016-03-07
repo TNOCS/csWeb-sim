@@ -26,6 +26,7 @@
     "RoadSim\\server.ts",
     "SimulationManager\\server.ts",
     "CloudSim\\src\\CloudSim.ts",
+    "CellCoverageSim\\src\\CellCoverageSim.ts",
     "CommunicationSim\\src\\CommunicationSim.ts",
     "CriticalObjectSim\\src\\CriticalObjectSim.ts",
     "ElectricalNetworkSim\\src\\ElectricalNetworkSim.ts",

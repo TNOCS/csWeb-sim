@@ -69,7 +69,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
 
     private scanScenarioFolders() {
         var count = 0;
-        var scenariosFolder = path.join(this.simDataFolder, 'Scenarios');
+        var scenariosFolder = path.join(__dirname, '../../', this.simDataFolder, 'Scenarios');
         var scenarios = csweb.getDirectories(scenariosFolder);
         scenarios.forEach(scName => {
             var scenario: ISimScenario = <ISimScenario>{sims: []};
