@@ -127,6 +127,15 @@
                         "smallSize": true,
                         "messages": [
                             {
+                                "name": "Start flooding Kijkduin",
+                                "httpMethod": {
+                                    "name": "POST"
+                                },
+                                "url": "/api/keys/sim.floodSimCmd",
+                                "message": "{ \"scenario\": \"Kijkduin\"}",
+                                "description": "Start the Kijkduin flooding scenario provided by HKV"
+                            },
+                            {
                                 "name": "Start flooding Ijsselmonde",
                                 "httpMethod": {
                                     "name": "POST"

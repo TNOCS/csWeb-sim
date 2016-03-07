@@ -160,6 +160,7 @@ export class FloodSim extends SimSvc.SimServiceManager {
         // Start loading all data
         var scenarios = csweb.getDirectories(this.scenarioFolder);
         scenarios.forEach(scenario => {
+            Winston.info(`Add scenario ${scenario}`);
             var scenarioFolder = path.join(this.scenarioFolder, scenario);
             var files = fs.readdirSync(scenarioFolder);
             files.forEach(f => {
