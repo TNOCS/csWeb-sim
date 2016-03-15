@@ -521,7 +521,7 @@
     "groups": [
         {
             "id": "76947763-7f29-4fa7-05af-901a08bc506d",
-            "title": "Incidenten",
+            "title": "Oorzaken",
             "layers": [
                 {
                     "id": "floodsim",
@@ -629,7 +629,15 @@
                     "isDynamic": true,
                     "gui": {},
                     "tags": []
-                },
+                }
+            ]
+        },
+        {
+            "id": "76947763-7f29-4fa7-05af-901a08bc4444",
+            "title": "Kritieke objecten",
+            "clustering": true,
+            "clusterLevel": 13,
+            "layers": [
                 {
                     "id": "powerstations",
                     "title": "Stroomstations",
@@ -727,15 +735,7 @@
                     "isDynamic": true,
                     "gui": {},
                     "tags": []
-                }
-            ]
-        },
-        {
-            "id": "76947763-7f29-4fa7-05af-901a08bc4444",
-            "title": "Incidents",
-            "clustering": true,
-            "clusterLevel": 13,
-            "layers": [
+                },
                 {
                     "id": "hazardousobjects",
                     "title": "Gevaarlijke objecten",
@@ -746,6 +746,28 @@
                     "typeUrl": "http://localhost:4567/api/resources/hazardous_objects",
                     "opacity": 90,
                     "isDynamic": true,
+                    "gui": {},
+                    "tags": []
+                }
+            ]
+        },
+        {
+            "id": "761231565-7f29-4fa7-05af-901a08bc4444",
+            "title": "Overige lagen",
+            "clustering": false,
+            "layers": [
+                {
+                    "id": "news",
+                    "title": "Nieuws",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "showFeatureNotifications": false,
+                    "url": "data/src/news.json",
+                    "typeUrl": "data/resourceTypes/news.json",
+                    "defaultFeatureType": "news",
+                    "opacity": 99,
+                    "fitToMap": false,
+                    "isDynamic": false,
                     "gui": {},
                     "tags": []
                 },
@@ -760,28 +782,6 @@
                     "defaultFeatureType": "betuwelijn",
                     "opacity": 50,
                     "fitToMap": true,
-                    "isDynamic": false,
-                    "gui": {},
-                    "tags": []
-                }
-            ]
-        },
-        {
-            "id": "761231565-7f29-4fa7-05af-901a08bc4444",
-            "title": "Nieuws",
-            "clustering": false,
-            "layers": [
-                {
-                    "id": "news",
-                    "title": "Nieuws",
-                    "type": "geojson",
-                    "renderType": "geojson",
-                    "showFeatureNotifications": false,
-                    "url": "data/src/news.json",
-                    "typeUrl": "data/resourceTypes/news.json",
-                    "defaultFeatureType": "news",
-                    "opacity": 99,
-                    "fitToMap": false,
                     "isDynamic": false,
                     "gui": {},
                     "tags": []
