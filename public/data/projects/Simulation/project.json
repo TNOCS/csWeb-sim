@@ -634,9 +634,9 @@
         },
         {
             "id": "76947763-7f29-4fa7-05af-901a08bc4444",
-            "title": "Kritieke objecten",
+            "title": "Nutsvoorziening",
             "clustering": true,
-            "clusterLevel": 13,
+            "clusterLevel": 8,
             "layers": [
                 {
                     "id": "powerstations",
@@ -651,7 +651,15 @@
                     "isDynamic": true,
                     "gui": {},
                     "tags": []
-                },
+                }
+            ]
+        },
+        {
+            "id": "77947763-7f29-4fa7-05af-901a08bc6243",
+            "title": "Kritieke objecten",
+            "clustering": true,
+            "clusterLevel": 12,
+            "layers": [
                 {
                     "id": "criticalobjects",
                     "reference": "criticalobjects",
@@ -666,6 +674,27 @@
                     "gui": {},
                     "tags": []
                 },
+                {
+                    "id": "hazardousobjects",
+                    "title": "Gevaarlijke objecten",
+                    "type": "dynamicgeojson",
+                    "renderType": "geojson",
+                    "showFeatureNotifications": true,
+                    "url": "http://localhost:4567/api/layers/hazardousobjects",
+                    "typeUrl": "http://localhost:4567/api/resources/hazardous_objects",
+                    "opacity": 90,
+                    "isDynamic": true,
+                    "gui": {},
+                    "tags": []
+                }
+            ]
+        },
+        {
+            "id": "7b947763-7f29-4fa7-05af-901a08bc62bb",
+            "title": "Communicatie",
+            "clustering": true,
+            "clusterLevel": 10,
+            "layers": [
                 {
                     "id": "communicationobjects",
                     "title": "Zendmasten",
@@ -722,7 +751,15 @@
                     "isDynamic": true,
                     "gui": {},
                     "tags": []
-                },
+                }
+            ]
+        },
+        {
+            "id": "8cc47763-7f29-4fa7-05af-901a08bc62b9",
+            "title": "Infrastructuur",
+            "clustering": true,
+            "clusterLevel": 10,
+            "layers": [
                 {
                     "id": "roadobjects",
                     "title": "Wegen",
@@ -731,19 +768,6 @@
                     "showFeatureNotifications": true,
                     "url": "http://localhost:4567/api/layers/roadobjects",
                     "typeUrl": "http://localhost:4567/api/resources/road",
-                    "opacity": 90,
-                    "isDynamic": true,
-                    "gui": {},
-                    "tags": []
-                },
-                {
-                    "id": "hazardousobjects",
-                    "title": "Gevaarlijke objecten",
-                    "type": "dynamicgeojson",
-                    "renderType": "geojson",
-                    "showFeatureNotifications": true,
-                    "url": "http://localhost:4567/api/layers/hazardousobjects",
-                    "typeUrl": "http://localhost:4567/api/resources/hazardous_objects",
                     "opacity": 90,
                     "isDynamic": true,
                     "gui": {},
