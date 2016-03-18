@@ -4,6 +4,7 @@ import TypeState = require('../../SimulationService/state/typestate');
 import csweb = require('csweb');
 import SimSvc = require('../../SimulationService/api/SimServiceManager');
 import HyperTimer = require('hypertimer');
+import fs = require('fs-extra');
 
 
 /** Defines the types of simulationservices available in a scenario */
@@ -50,6 +51,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
             if (options.hasOwnProperty('simDataFolder')) {
                 this.simDataFolder = options['simDataFolder'];
                 this.scanScenarioFolders();
+                this.copyResources();
             }
         }
         this.simServices = simServices;
@@ -62,6 +64,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
 
         this.deleteFilesInFolder(path.join(__dirname, '../public/data/layers'));
         this.deleteFilesInFolder(path.join(__dirname, '../public/data/keys'));
+        this.deleteFilesInFolder(path.join(__dirname, '../public/data/resourceTypes'));
 
         this.sendAck(this.fsm.currentState);
     }
@@ -84,12 +87,34 @@ export class SimulationManager extends SimSvc.SimServiceManager {
         });
         Winston.info('Scanned ' + count + ' scenario folders');
     }
+    
+    private copyResources() {
+        var count = 0;
+        var resourcesFolder = path.join(__dirname, '../../', this.simDataFolder, 'ResourceTypes');
+        var resources = csweb.getFiles(resourcesFolder);
+        var destFolder =     path.join(__dirname, 'public', 'data', 'resourceTypes');
+        resources.forEach(res => {
+            fs.copy(res, path.join(destFolder, path.basename(res)));
+            count += 1;
+        });
+        Winston.error('Copied ' + count + ' resource files');
+    }
+    
+    private copyAdditionalLayers(folder: string) {
+        var count = 0;
+        var layers = csweb.getFiles(folder);
+        var destFolder = path.join(__dirname, '..', '..', 'public', 'data', 'layers');
+        fs.copySync(folder, destFolder);
+        // For some reason the asynchronous 'copy' causes EPERM: not permitted errors
+        // fs.copy(folder, destFolder, (err: Error) => {
+        //     if (err) {
+        //         Winston.error('Error copying file: ' +  err);
+        //     }
+        // });
+        Winston.info('Copying ' + layers.length + ' static layer files from ' + folder + ' to ' + destFolder);
+    }
 
     private startScenario(scenarioName: string) {
-        if (this.currentScenario === scenarioName) {
-            Winston.info('Scenario ' + scenarioName + ' already loaded');
-            return;
-        }
         if (Object.keys(this.availableScenarios).indexOf(scenarioName) < 0) {
             Winston.warn('Scenario ' + scenarioName + ' not found');
             return;
@@ -97,14 +122,18 @@ export class SimulationManager extends SimSvc.SimServiceManager {
         var scenario = this.availableScenarios[scenarioName];
         scenario.sims.forEach((sim) => {
             if (!this.simServices.hasOwnProperty(sim.type)) {
-                Winston.warn('SimService ' + sim.type + ' not found.');
+                if (sim.type === 'Additional') {
+                    this.copyAdditionalLayers(path.join(sim.folder));
+                } else {
+                    Winston.warn('SimService ' + sim.type + ' not found.');
+                }
                 return;
             }
             this.simServices[sim.type].start(path.join(sim.folder));
-            Winston.info('Started ' + sim.type +  ' with folder: ' + sim.folder);
+            Winston.info('Started ' + sim.type + ' with folder: ' + sim.folder);
         });
         this.currentScenario = scenarioName;
-         Winston.info('Scenario ' + scenarioName + ' loaded succesfully');
+        Winston.info('Scenario ' + scenarioName + ' loaded succesfully');
     }
 
 

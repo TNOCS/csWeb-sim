@@ -175,7 +175,7 @@ export class SimServiceManager extends csweb.ApiManager {
      * @return {[type]}         [description]
      */
     private terminateProcess() {
-        Winston.info("${this.name}: Terminating process. Bye!")
+        Winston.info(`${this.name}: Terminating process. Bye!`);
         this.sendAck(SimState.Exit);
     }
 

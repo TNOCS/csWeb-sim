@@ -19,6 +19,8 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
     private sourceFolder = '';
     private coverageLayer: csweb.ILayer;
     private communicationObjects: csweb.Feature[] = [];
+    /** Dictionary of feature id's and their status (to prevent updating the same object twice) */
+    private objectStatuses: {[id: string] : SimSvc.InfrastructureState} = {};
     private upcomingEventTime: number; // milliseconds
     private gridParams: csweb.IGridDataSourceParameters = <csweb.IGridDataSourceParameters>{};
     private gridData: number[][] = [];
@@ -44,6 +46,10 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
             Winston.info(`CellCovSim: Comm objects layer received. ID: ${changed.id} Type:${changed.type}`);
             this.communicationObjects = layer.features;
             this.initCommObjects();
+            if (this.isInitialized) {
+                this.coverageLayer.data = this.stringifyGrid();
+                this.publishLayerThrottled();
+            }
         });
     }
 
@@ -88,34 +94,38 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
 
         this.calculateCoverageStamp(25 * this.gridParams.deltaLon);
         this.isInitialized = true;
+        Winston.info(`Initialized CellCoverage with ${nRows} rows and ${nCols} columns.`);
     }
 
     private initCommObjects(): void {
-        if (!this.isInitialized) return;
+        Winston.error('initCommObjects ' + this.isInitialized + ' objs: ' + this.communicationObjects.length);
         for (let i = 0; i < this.communicationObjects.length; i++) {
             var co = this.communicationObjects[i];
-            this.updateGrid(co);
+            this.objectStatuses[co.id] = this.getFeatureState(co); 
+            this.updateGrid(co, true);
         }
-        this.coverageLayer.data = this.stringifyGrid();
-        this.publishLayer(this.coverageLayer);
     }
 
-    private updateGrid(f: csweb.Feature) {
+    private updateGrid(f: csweb.Feature, init: boolean = false) {
+        if (!this.isInitialized) return;
         let fLoc = f.geometry.coordinates;
         let fx = Math.floor((fLoc[0] - this.gridParams.startLon) / this.gridParams.deltaLon);
         let fy = Math.floor((fLoc[1] - this.gridParams.startLat) / this.gridParams.deltaLat);
         if (fx < 0 || fx > this.gridParams.columns) return;
         if (fy < 0 || fy > this.gridParams.rows) return;
-        var state = this.getFeatureState(f);
-        if (state === SimSvc.InfrastructureState.Ok || state === SimSvc.InfrastructureState.Stressed) {
+        var state = +this.getFeatureState(f); // State might be returned as string ("2"), so parse to a number
+        if (!this.objectStatuses.hasOwnProperty(f.id)) return console.log(`Unknown feature id ${f.id}`);
+        var prevState = <SimSvc.InfrastructureState>this.objectStatuses[f.id];
+        if (state === prevState && !init) return;
+        if (state !== SimSvc.InfrastructureState.Failed && (prevState === SimSvc.InfrastructureState.Failed || init)) {
             this.applyStamp(fx, fy, 1);
-            // (this.gridData[fy][fx] < 0) ? this.gridData[fy][fx] = 1 : this.gridData[fy][fx] += 1;
-        } else {
-            this.applyStamp(fx, fy, -1);
-            // (this.gridData[fy][fx] <= 0) ? this.gridData[fy][fx] = this.gridData[fy][fx] : this.gridData[fy][fx] -= 1;
         }
+        if (state === SimSvc.InfrastructureState.Failed && prevState !== SimSvc.InfrastructureState.Failed && !init) {
+            this.applyStamp(fx, fy, -1);
+        }
+        this.objectStatuses[f.id] = state;
     }
-    
+
     /**
     * Calculate a quarter coverage area around location (0,0) in a rectangular grid.
     */
@@ -148,7 +158,7 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
     }
 
     private stringifyGrid(): string {
-        if (!this.gridParams) return '';
+        if (!this.isInitialized) return '';
         let nRows = this.gridParams.rows;
         let nCols = this.gridParams.columns;
 
@@ -213,29 +223,37 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
         this.isInitialized = false;
 
         this.communicationObjects = [];
+        this.objectStatuses = {};
         // Copy original csweb layers to dynamic layers
         var coverageFile = path.join(this.sourceFolder, 'coveragesim.asc');
         fs.readFile(coverageFile, 'utf8', (err, data) => {
             if (err) {
                 Winston.error(`Error reading ${coverageFile}: ${err}`);
                 return;
+            } else {
+                this.initLayer(data);
             }
-            this.coverageLayer = this.createCoverageLayer('', 'Coverage');
-            this.gridHeader = data;
-            this.coverageLayer.data = this.gridHeader;
-            this.parseParameters(this.gridHeader);
-            this.initCoverageArea();
-            this.coverageLayer.data = this.stringifyGrid();
-            this.publishLayer(this.coverageLayer);
         });
         this.fsm.currentState = SimSvc.SimState.Ready;
         this.sendAck(this.fsm.currentState);
+    }
+
+    private initLayer(data: any) {
+        this.coverageLayer = this.createCoverageLayer('', 'Coverage');
+        this.gridHeader = data;
+        this.coverageLayer.data = this.gridHeader;
+        this.parseParameters(this.gridHeader);
+        this.initCoverageArea();
+        this.initCommObjects();
+        this.coverageLayer.data = this.stringifyGrid();
+        this.publishLayerThrottled();
     }
 
     private parseParameters(data: string): void {
         this.gridParams = <csweb.IGridDataSourceParameters>{};
         csweb.IsoLines.convertEsriHeaderToGridParams(this.coverageLayer, this.gridParams);
         this.gridData = [];
+        this.isInitialized = false;
     }
 
     /** Set the state and failure mode of a feature, optionally publishing it too. */
@@ -302,7 +320,7 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
         this.publishLayer(this.coverageLayer);
     }, 500, { leading: false, trailing: true });
 
-        
+
     /**
      * pointInsidePolygon returns true if a 2D point lies within a polygon of 2D points
      * @param  {number[]}   point   [lat, lng]
