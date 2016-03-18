@@ -50,6 +50,15 @@
                         "smallSize": false,
                         "messages": [
                             {
+                                "name": "Start scenario Haaglanden",
+                                "httpMethod": {
+                                    "name": "POST"
+                                },
+                                "url": "/api/keys/Sim.Job",
+                                "message": "{ \"start\": \"haaglanden\"}",
+                                "description": "Start scenario"
+                            },
+                            {
                                 "name": "Start scenario Den Haag",
                                 "httpMethod": {
                                     "name": "POST"
@@ -801,7 +810,7 @@
                     "type": "geojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": false,
-                    "url": "data/src/omtrek.json",
+                    "url": "data/layers/clip.json",
                     "typeUrl": "data/resourceTypes/betuwelijn.json",
                     "defaultFeatureType": "betuwelijn",
                     "opacity": 50,
@@ -831,6 +840,36 @@
                     "renderType": "geojson",
                     "showFeatureNotifications": false,
                     "url": "data/src/gemeente.json",
+                    "typeUrl": "data/resourceTypes/gemeente.json",
+                    "defaultFeatureType": "gemeente",
+                    "opacity": 70,
+                    "fitToMap": false,
+                    "isDynamic": false,
+                    "gui": {},
+                    "tags": []
+                },
+                {
+                    "id": "wijk",
+                    "title": "Wijken",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "showFeatureNotifications": false,
+                    "url": "data/layers/capped_Wijk_2015.json",
+                    "typeUrl": "data/resourceTypes/gemeente.json",
+                    "defaultFeatureType": "gemeente",
+                    "opacity": 70,
+                    "fitToMap": false,
+                    "isDynamic": false,
+                    "gui": {},
+                    "tags": []
+                },
+                {
+                    "id": "buurt",
+                    "title": "Buurten",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "showFeatureNotifications": false,
+                    "url": "data/layers/capped_Buurt_2015.json",
                     "typeUrl": "data/resourceTypes/gemeente.json",
                     "defaultFeatureType": "gemeente",
                     "opacity": 70,
