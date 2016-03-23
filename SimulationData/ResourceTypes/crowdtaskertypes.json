@@ -30,7 +30,23 @@
                 "fillOpacity": 0.8,
                 "nameLabel": "name"
             },
-            "propertyTypeKeys": "Name;name;id;status;event_id;date_deadline;category;description;area;"
+            "propertyTypeKeys": "Name;name;id;status;event_id;date_deadline;category;description;area;steps;attachment_id;attachment_url;"
+        },
+        "Feedback": {
+            "name": "Feedback",
+            "style": {
+                "iconUri": "images/c2000.png",
+                "iconWidth": 26,
+                "iconHeight": 26,
+                "strokeWidth": 2,
+                "strokeColor": "#000000",
+                "selectedStrokeColor": "#990000",
+                "fillColor": "#ffffff",
+                "opacity": 0.8,
+                "fillOpacity": 0.8,
+                "nameLabel": "status"
+            },
+            "propertyTypeKeys": "Name;id;status;task_id;publish_allowed;step_id;date_completed;category;description;area;data;attachment_id;attachment_url;"
         }
     },
     "propertyTypeData": {
@@ -66,6 +82,13 @@
             "label": "type",
             "title": "Type",
             "type": "text",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "publish_allowed": {
+            "label": "publish_allowed",
+            "title": "Publish allowed",
+            "type": "boolean",
             "visibleInCallOut": true,
             "canEdit": true
         },
@@ -111,6 +134,20 @@
             "visibleInCallOut": true,
             "canEdit": false
         },
+        "date_completed": {
+            "label": "date_completed",
+            "languages": {
+                "nl": {
+                    "title": "Datum voltooid"
+                },
+                "en": {
+                    "title": "Date completed"
+                }
+            },
+            "type": "date",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
         "description": {
             "label": "description",
             "languages": {
@@ -121,7 +158,21 @@
                     "title": "Description"
                 }
             },
-            "type": "textare",
+            "type": "textarea",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
+        "steps": {
+            "label": "steps",
+            "languages": {
+                "nl": {
+                    "title": "Stappen"
+                },
+                "en": {
+                    "title": "Steps"
+                }
+            },
+            "type": "textarea",
             "visibleInCallOut": true,
             "canEdit": false
         },
@@ -135,6 +186,41 @@
         "event_id": {
             "label": "event_id",
             "title": "Event ID",
+            "type": "textarea",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "step_id": {
+            "label": "step_id",
+            "title": "Step ID",
+            "type": "textarea",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "task_id": {
+            "label": "task_id",
+            "title": "Task ID",
+            "type": "textarea",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "attachment_id": {
+            "label": "attachment_id",
+            "title": "Attachment ID",
+            "type": "textarea",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "attachment_url": {
+            "label": "attachment_url",
+            "title": "Attachment URL",
+            "type": "bbcode",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "data": {
+            "label": "data",
+            "title": "Data",
             "type": "textarea",
             "visibleInCallOut": true,
             "canEdit": true

@@ -207,6 +207,7 @@ httpServer.listen(server.get('port'), () => {
         diffPropertiesBlacklist: [],
         url: "http://crowdtasker.ait.ac.at/be/api/",
         urlParams: {
+            attachmentPath: "public\\data\\api\\attachments"
         }
     }
 
@@ -215,5 +216,5 @@ httpServer.listen(server.get('port'), () => {
         restSource.init(restSourceOptions, (msg: string) => {
             Winston.info('RestDataSource: ' + msg);
         });
-    }, 3000);
+    }, 4000);
 });

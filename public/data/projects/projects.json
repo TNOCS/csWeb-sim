@@ -3,12 +3,12 @@
     "title": "SimMan",
     "maxBounds": {
         "southWest": [
-            44.0,
-            -2.0
+            44,
+            -2
         ],
         "northEast": [
-            56.0,
-            25.0
+            56,
+            25
         ]
     },
     "viewBounds": {
@@ -17,10 +17,10 @@
             4.55
         ],
         "northEast": [
-            52.30,
+            52.3,
             5.05
         ]
-    },    
+    },
     "widgetStyles": {
         "default": {
             "borderWidth": 1,

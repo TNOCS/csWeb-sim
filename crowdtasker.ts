@@ -1,5 +1,9 @@
-export function getData(request: any, dataParameters: any, cb: Function) {
+var _converterOptions;
+export function getData(request: any, dataParameters: any, converterOptions: any, cb: Function) {
     if (typeof dataParameters !== 'object') return cb(null);
+    _converterOptions = converterOptions;
+    _converterOptions.request = request;
+    _converterOptions.dataParameters = dataParameters;
     var options = {
         json: true
     };
@@ -9,6 +13,7 @@ export function getData(request: any, dataParameters: any, cb: Function) {
     if (options.hasOwnProperty('url')) {
         options['baseUrl'] = JSON.parse(JSON.stringify(options['url']));
     }
+    _converterOptions.options = options;
 
     //Get events
     options['uri'] = '/events?api_key=' + options['api_key'];
@@ -29,18 +34,20 @@ export function getData(request: any, dataParameters: any, cb: Function) {
                     var key = keys[keyIndex];
                     f.properties['stat_' + key] = eventStats[key];
                 }
-                if (processedEvents === eventFeatures.length - 1) {
+                if (processedEvents >= eventFeatures.length) {
                     processTasks(request, options, eventFeatures, cb);
                     // cb(eventFeatures);
                 }
             });
-        })
+        });
+        if (eventFeatures.length === 0) {
+             cb(eventFeatures);
+        }
     });
 }
 
 // Get event tasks
 function processTasks(request, options, eventFeatures, cb) {
-    console.log('Process tasks');
     var processedEvents = 0;
     var allTaskFeatures = [];
     eventFeatures.forEach((ef: IFeature, efIndex) => {
@@ -53,31 +60,37 @@ function processTasks(request, options, eventFeatures, cb) {
                 allTaskFeatures = allTaskFeatures.concat(taskFeatures);
             }
             processedEvents += 1;
-            console.log('processedEvents: ' + processedEvents + '\t allTaskFeatures: ' + allTaskFeatures.length);
-            if (processedEvents === eventFeatures.length) {
-                cb(eventFeatures.concat(allTaskFeatures));
+            if (processedEvents >= eventFeatures.length) {
+                processFeedbacks(request, options, eventFeatures, allTaskFeatures, cb)
+                // cb(eventFeatures.concat(allTaskFeatures));
             }
         });
     });
 }
 
-
-// requestTaskFeedbacks(request, options, (taskFeedbacks: TFeedback) => {
-//                 var keys = Object.keys(taskFeedbacks);
-//                 keys.forEach((key, keyIndex) => {
-//                     f.properties['stat_' + key] = taskFeedbacks[key];
-//                     if (keyIndex === keys.length - 1) {
-//                         if (fIndex === taskFeatures.length - 1) {
-//                             cb(taskFeatures);
-//                         }
-//                     }
-//                 });
-//                 if (keys.length === 0) {
-//                     if (fIndex === taskFeatures.length - 1) {
-//                         cb(taskFeatures);
-//                     }
-//                 }
-//             });
+// Get task feedbacks
+function processFeedbacks(request, options, eventFeatures, taskFeatures, cb) {
+    var processedTasks = 0;
+    var allFeedbacks = [];
+    taskFeatures.forEach((t: IFeature, tIndex) => {
+        options['uri'] = `/tasks/feedbacks?task=${t.id}&api_key=${options['api_key']}`;
+        console.log(options['uri']);
+        requestFeedbacks(request, options, (feedbackFeatures: IFeature[]) => {
+            if (typeof feedbackFeatures === 'number') {
+                console.log('Error requesting tasks: ' + feedbackFeatures);
+            } else {
+                allFeedbacks = allFeedbacks.concat(feedbackFeatures);
+            }
+            processedTasks += 1;
+            if (processedTasks === taskFeatures.length) {
+                cb(eventFeatures.concat(taskFeatures, allFeedbacks));
+            }
+        });
+    });
+    if (taskFeatures.length === 0) {
+        cb(eventFeatures);
+    }
+}
 
 function requestEvents(request, options, cb) {
     request.get(options, (err, response, data) => {
@@ -103,6 +116,18 @@ function requestTasks(request, options, cb) {
     });
 }
 
+function requestFeedbacks(request, options, cb) {
+    request.get(options, (err, response, data) => {
+        if (err || response.statusCode !== 200) {
+            cb([]);
+            return;
+        }
+        parseFeedbackData(data, (features) => {
+            cb(features);
+        });
+    });
+}
+
 function requestEventStats(request, options, cb) {
     request.get(options, (err, response, data) => {
         if (err || response.statusCode !== 200) {
@@ -114,10 +139,7 @@ function requestEventStats(request, options, cb) {
     });
 }
 
-
-
 function parseEventData(data: any, callback: Function) {
-    console.log('Parse event data');
     if (!data || !data.forEach) {
         callback([]);
         return;
@@ -154,7 +176,6 @@ function parseEventData(data: any, callback: Function) {
 }
 
 function parseTaskData(data: any, callback: Function) {
-    console.log('Parse task data');
     if (!data || !data.forEach) {
         callback([]);
         return;
@@ -176,6 +197,8 @@ function parseTaskData(data: any, callback: Function) {
                 f.properties['area_description'] = area.description;
                 f.geometry = area.region;
                 delete f.geometry['crs']; // Should be an object according to GeoJSON specification
+            } else if (key === 'steps') {
+                f.properties[key] = JSON.stringify(t[key], null, 2);
             } else if (key === 'id') {
                 f.id = t[key];
             } else { 
@@ -191,6 +214,103 @@ function parseTaskData(data: any, callback: Function) {
     });
     if (data.length === 0) {
         callback(taskFeatures);
+    }
+}
+
+function parseFeedbackData(data: any, callback: Function) {
+    if (!data || !data.forEach) {
+        callback([]);
+        return;
+    }
+    var processedFeatures = 0;
+    var feedbackFeatures = [];
+    data.forEach((tf: TFeedback) => {
+        if (tf.hasOwnProperty('feedbacks') && tf.feedbacks.length > 0) {
+            for (var fbCount = 0; fbCount < tf.feedbacks.length; fbCount++) {
+                var fb: FBContent = tf.feedbacks[fbCount];
+                var f = {
+                    id: null,
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {}
+                };
+                // Add feedback parameters
+                var tfKeys = Object.keys(tf);
+                for (var keyIndex = 0; keyIndex < tfKeys.length; keyIndex++) {
+                    var key = tfKeys[keyIndex];
+                    if (key === 'feedbacks') {
+                        continue;
+                    } else if (key === 'id') {
+                        f.id = tf[key] + '-' + fbCount;
+                    } else { 
+                        f.properties[key] = tf[key];
+                    }
+                }
+                var fbKeys = Object.keys(fb);
+                for (var keyIndex = 0; keyIndex < fbKeys.length; keyIndex++) {
+                    var key = fbKeys[keyIndex];
+                    if (key === 'position') {
+                        f.geometry = fb[key];
+                        delete f.geometry['crs']; // Should be an object according to GeoJSON specification
+                    } else if (key === 'attachment_id') {
+                        f.properties[key] = fb[key];
+                        f.properties['attachment_url'] = `[url=data/api/attachments/${fb[key]}.jpg]Link[/url]`;
+                        getAttachment(fb[key]);
+                    } else { 
+                        f.properties[key] = fb[key];
+                    }
+                }
+                f.properties['featureTypeId'] = 'Feedback';
+                // Ensure a position
+                if (!f.geometry.hasOwnProperty('coordinates')) {
+                    f.geometry = {
+                        coordinates: [5, 52],
+                        type: 'Point'
+                    }
+                }
+                console.log(f.id);
+                feedbackFeatures.push(f);
+            }
+        }
+        processedFeatures += 1;
+        if (processedFeatures >= data.length) {
+            callback(feedbackFeatures);
+        }
+    });
+    if (data.length === 0) {
+        callback(feedbackFeatures);
+    }
+}
+
+function getAttachment(id: string) {
+    if (!_converterOptions.hasOwnProperty('apiManager')) return;
+    if (!_converterOptions.hasOwnProperty('dataParameters')) return;
+    if (!_converterOptions['dataParameters'].hasOwnProperty('attachmentPath')) return;
+    var attachmentPath = _converterOptions['dataParameters']['attachmentPath'];
+    var apiMan = _converterOptions['apiManager'];
+    var options = _converterOptions['options'];
+    var request = _converterOptions['request'];
+    var fs = _converterOptions['fs'];
+    
+    // Check if file exists
+    var file = `${attachmentPath}\\${id}.jpg`;
+    try  {
+        fs.accessSync(file);
+        console.log('Skipping attachment.');
+    } catch (error) {
+        fs.ensureFileSync(file);
+        options['uri'] = `/tasks/feedbacks/attachments/${id}?api_key=${options['api_key']}`;
+        request.get(options, (err, response, data) => {
+            if (err || response.statusCode !== 200) {
+                console.log('Error getting attachment.' + err);
+                return;
+            }
+            var fStream = fs.createWriteStream(file);
+            request(options).pipe(fStream).on('close', () => {
+                console.log('Written attachment.');
+                fStream.end();
+            });
+        });
     }
 }
 
