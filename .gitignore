@@ -28,7 +28,6 @@ HazardousObjectSim/**/*.js
 RoadSim/**/*.js
 **/tsconfig.json
 Scripts/typings/
-SimulationData/ResourceTypes/
 SimulationData/Scenarios/IJsselmonde/Flooding/ijsselmonde_p50/Superfluous/
 SimulationData/Scenarios/IJsselmonde/Flooding/probability/Superfluous/025.asc
 SimulationData/Scenarios/IJsselmonde/Flooding/probability/Superfluous/

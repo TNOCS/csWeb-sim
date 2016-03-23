@@ -198,4 +198,22 @@ api.init(path.join(path.resolve(__dirname), 'public/data'), () => {
 
 httpServer.listen(server.get('port'), () => {
     Winston.info('Express server listening on port ' + server.get('port'));
+    
+    var restSourceOptions: csweb.IRestDataSourceSettings = {
+        converterFile: path.join(__dirname, './crowdtasker.js'),
+        pollIntervalSeconds: 60,
+        pruneIntervalSeconds: 300,
+        diffIgnoreGeometry: false,
+        diffPropertiesBlacklist: [],
+        url: "http://crowdtasker.ait.ac.at/be/api/",
+        urlParams: {
+        }
+    }
+
+    setTimeout(() => {
+        var restSource = new csweb.RestDataSource(server, api, 'crowdtasker', '/crowdtasker');
+        restSource.init(restSourceOptions, (msg: string) => {
+            Winston.info('RestDataSource: ' + msg);
+        });
+    }, 3000);
 });

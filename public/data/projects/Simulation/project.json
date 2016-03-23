@@ -530,17 +530,30 @@
     "groups": [
         {
             "id": "76947763-7f29-4fa7-05af-901a08bc506d",
-            "title": "Oorzaken",
+            "languages": {
+                        "en": {
+                            "title": "Causes"
+                        },
+                        "nl": {
+                            "title": "Oorzaken"
+                        }
+                    },
             "layers": [
                 {
                     "id": "floodsim",
-                    "title": "Overstroming",
-                    "description": "Overstroming.",
+                    "languages": {
+                        "en": {
+                            "title": "Flooding"
+                        },
+                        "nl": {
+                            "title": "Overstroming"
+                        }
+                    },
                     "type": "grid",
                     "renderType": "gridlayer",
                     "heatmapItems": null,
-                    "url": "http://localhost:4567/api/layers/floodsim",
-                    "typeUrl": "http://localhost:4567/api/resources/floodsimtypes",
+                    "url": "/api/layers/floodsim",
+                    "typeUrl": "/api/resources/floodsimtypes",
                     "opacity": 75,
                     "dataSourceParameters": {
                         "propertyName": "h",
@@ -578,8 +591,8 @@
                     "description": "Gaswolk bij Ahoy.",
                     "type": "grid",
                     "renderType": "gridlayer",
-                    "url": "http://localhost:4567/api/layers/cloudsim",
-                    "typeUrl": "http://localhost:4567/api/resources/cloudsimtypes",
+                    "url": "/api/layers/cloudsim",
+                    "typeUrl": "/api/resources/cloudsimtypes",
                     "opacity": 75,
                     "dataSourceParameters": {
                         "propertyName": "c",
@@ -643,19 +656,32 @@
         },
         {
             "id": "76947763-7f29-4fa7-05af-901a08bc4444",
-            "title": "Nutsvoorziening",
+            "languages": {
+                "en": {
+                    "title": "Public utilities"
+                },
+                "nl": {
+                    "title": "Nutsvoorziening"
+                }
+            },
             "clustering": true,
             "clusterLevel": 8,
-            "layers": [
+            "layers": [                
                 {
                     "id": "powerstations",
-                    "title": "Stroomstations",
-                    "description": "Elektrische stroomstations",
+                    "languages": {
+                        "en": {
+                            "title": "Power stations"
+                        },
+                        "nl": {
+                            "title": "Stroomstations"
+                        }
+                    },
                     "type": "dynamicgeojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": true,
-                    "url": "http://localhost:4567/api/layers/powerstations",
-                    "typeUrl": "http://localhost:4567/api/resources/electrical_network",
+                    "url": "/api/layers/powerstations",
+                    "typeUrl": "/api/resources/electrical_network",
                     "opacity": 90,
                     "isDynamic": true,
                     "gui": {},
@@ -665,19 +691,37 @@
         },
         {
             "id": "77947763-7f29-4fa7-05af-901a08bc6243",
-            "title": "Kritieke objecten",
+            "languages": {
+                "en": {
+                    "title": "Vulnerable objects",
+                    "description": "Hospitals and nursing homes"
+                },
+                "nl": {
+                    "title": "Kwetsbare objecten",
+                    "description": "Ziekenhuizen en verpleeghuizen"
+                }
+            },
             "clustering": true,
             "clusterLevel": 12,
             "layers": [
                 {
                     "id": "criticalobjects",
                     "reference": "criticalobjects",
-                    "title": "Kwetsbare objecten",
+                    "languages": {
+                        "en": {
+                            "title": "Vulnerable objects",
+                            "description": "Hospitals and nursing homes"
+                        },
+                        "nl": {
+                            "title": "Kwetsbare objecten",
+                            "description": "Ziekenhuizen en verpleeghuizen"
+                        }
+                    },
                     "type": "dynamicgeojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": true,
-                    "url": "http://localhost:4567/api/layers/criticalobjects",
-                    "typeUrl": "http://localhost:4567/api/resources/critical_objects",
+                    "url": "/api/layers/criticalobjects",
+                    "typeUrl": "/api/resources/critical_objects",
                     "opacity": 90,
                     "isDynamic": true,
                     "gui": {},
@@ -685,12 +729,21 @@
                 },
                 {
                     "id": "hazardousobjects",
-                    "title": "Gevaarlijke objecten",
+                    "languages": {
+                        "en": {
+                            "title": "Dangerous objects",
+                            "description": "E.g. gas stations, LPG storages, etc."
+                        },
+                        "nl": {
+                            "title": "Gevaarlijke objecten",
+                            "description": "Bijv. tankstations, LPG-opslagplaatsen, etc."
+                        }
+                    },
                     "type": "dynamicgeojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": true,
-                    "url": "http://localhost:4567/api/layers/hazardousobjects",
-                    "typeUrl": "http://localhost:4567/api/resources/hazardous_objects",
+                    "url": "/api/layers/hazardousobjects",
+                    "typeUrl": "/api/resources/hazardous_objects",
                     "opacity": 90,
                     "isDynamic": true,
                     "gui": {},
@@ -706,12 +759,19 @@
             "layers": [
                 {
                     "id": "communicationobjects",
-                    "title": "Zendmasten",
+                    "languages": {
+                        "en": {
+                            "title": "Cell towers"
+                        },
+                        "nl": {
+                            "title": "Zendmasten"
+                        }
+                    },
                     "type": "dynamicgeojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": true,
-                    "url": "http://localhost:4567/api/layers/communicationobjects",
-                    "typeUrl": "http://localhost:4567/api/resources/comm_objects",
+                    "url": "/api/layers/communicationobjects",
+                    "typeUrl": "/api/resources/comm_objects",
                     "opacity": 90,
                     "isDynamic": true,
                     "gui": {},
@@ -719,12 +779,20 @@
                 },
                 {
                     "id": "cellcoverage",
-                    "title": "Dekking",
+                    "languages": {
+                        "en": {
+                            "title": "Coverage"
+                        },
+                        "nl": {
+                            "title": "Dekking"
+                        }
+                    },
                     "type": "grid",
+                    
                     "renderType": "gridlayer",
                     "showFeatureNotifications": false,
-                    "url": "http://localhost:4567/api/layers/cellcoverage",
-                    "typeUrl": "http://localhost:4567/api/resources/coveragetypes",
+                    "url": "/api/layers/cellcoverage",
+                    "typeUrl": "/api/resources/coveragetypes",
                     "opacity": 35,
                     "dataSourceParameters": {
                         "propertyName": "h",
@@ -765,18 +833,70 @@
         },
         {
             "id": "8cc47763-7f29-4fa7-05af-901a08bc62b9",
-            "title": "Infrastructuur",
+            "languages": {
+                "en": {
+                    "title": "Infrastructure"
+                },
+                "nl": {
+                    "title": "Infrastructuur"
+                }
+            },
             "clustering": true,
             "clusterLevel": 10,
             "layers": [
                 {
                     "id": "roadobjects",
                     "title": "Wegen",
+                    "languages": {
+                        "en": {
+                            "title": "Roads"
+                        },
+                        "nl": {
+                            "title": "Wegen"
+                        }
+                    },
                     "type": "dynamicgeojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": true,
-                    "url": "http://localhost:4567/api/layers/roadobjects",
-                    "typeUrl": "http://localhost:4567/api/resources/road",
+                    "url": "/api/layers/roadobjects",
+                    "typeUrl": "/api/resources/road",
+                    "opacity": 90,
+                    "isDynamic": true,
+                    "gui": {},
+                    "tags": []
+                }
+            ]
+        },
+        {
+            "id": "8cc47763-7f29-4fa7-05af-901a08bc4569",
+            "title": "Crowdtasker",
+            "languages": {
+                "en": {
+                    "description": "Crowdtasker allows volunteers to help in crisis situations."
+                },
+                "nl": {
+                    "description": "Crowdtasker biedt vrijwilligers de mogelijkheid om te helpen tijdens crisis situaties."
+                }
+            },
+            "clustering": true,
+            "clusterLevel": 10,
+            "layers": [
+                {
+                    "id": "crowdtasker",
+                    "title": "Crowdtasker",
+                    "languages": {
+                        "en": {
+                            "description": "Crowdtasker allows volunteers to help in crisis situations."
+                        },
+                        "nl": {
+                            "description": "Crowdtasker biedt vrijwilligers de mogelijkheid om te helpen tijdens crisis situaties."
+                        }
+                    },
+                    "type": "dynamicgeojson",
+                    "renderType": "geojson",
+                    "showFeatureNotifications": true,
+                    "url": "/crowdtasker",
+                    "typeUrl": "/data/resourceTypes/crowdtaskertypes.json",
                     "opacity": 90,
                     "isDynamic": true,
                     "gui": {},
@@ -786,8 +906,15 @@
         },
         {
             "id": "761231565-7f29-4fa7-05af-901a08bc4444",
-            "title": "Overige lagen",
-            "clustering": false,
+            "languages": {
+                "en": {
+                    "title": "Additional layers"
+                },
+                "nl": {
+                    "title": "Overige lagen"
+                }
+            },
+            "clustering": false,            
             "layers": [
                 {
                     "id": "news",
@@ -885,8 +1012,8 @@
                     "type": "grid",
                     "renderType": "gridlayer",
                     "heatmapItems": null,
-                    "url": "http://localhost:4567/api/layers/floodsim",
-                    "typeUrl": "http://localhost:4567/api/resources/floodsimtypes",
+                    "url": "/api/layers/floodsim",
+                    "typeUrl": "/api/resources/floodsimtypes",
                     "opacity": 75,
                     "dataSourceParameters": {
                         "propertyName": "p",

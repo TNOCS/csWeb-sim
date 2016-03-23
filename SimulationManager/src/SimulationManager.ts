@@ -64,7 +64,7 @@ export class SimulationManager extends SimSvc.SimServiceManager {
 
         this.deleteFilesInFolder(path.join(__dirname, '../public/data/layers'));
         this.deleteFilesInFolder(path.join(__dirname, '../public/data/keys'));
-        this.deleteFilesInFolder(path.join(__dirname, '../public/data/resourceTypes'));
+        // this.deleteFilesInFolder(path.join(__dirname, '../public/data/resourceTypes'));
 
         this.sendAck(this.fsm.currentState);
     }
@@ -90,21 +90,29 @@ export class SimulationManager extends SimSvc.SimServiceManager {
     
     private copyResources() {
         var count = 0;
-        var resourcesFolder = path.join(__dirname, '../../', this.simDataFolder, 'ResourceTypes');
+        var resourcesFolder = path.join(__dirname, '..', '..', this.simDataFolder, 'ResourceTypes');
         var resources = csweb.getFiles(resourcesFolder);
-        var destFolder =     path.join(__dirname, 'public', 'data', 'resourceTypes');
-        resources.forEach(res => {
-            fs.copy(res, path.join(destFolder, path.basename(res)));
-            count += 1;
+        var destFolder = path.join(__dirname, '..', '..', 'public', 'data', 'resourceTypes');
+        resources.forEach((res) => {
+            var resFile = path.join(resourcesFolder, res);
+            var destFile = path.join(destFolder, path.basename(res));
+            fs.ensureFileSync(resFile);
+            fs.copy(resFile, destFile, {clobber: true}, (err) => {
+                if (err) {
+                    Winston.error('Error copying ' + res + ' resource file: ' + err);
+                } else {
+                    // Winston.info('Copied ' + resFile + ' to ' + destFile);
+                }
+            });
         });
-        Winston.error('Copied ' + count + ' resource files');
+        Winston.warn('Copied ' + resources.length + ' resource files');
     }
     
     private copyAdditionalLayers(folder: string) {
         var count = 0;
         var layers = csweb.getFiles(folder);
         var destFolder = path.join(__dirname, '..', '..', 'public', 'data', 'layers');
-        fs.copySync(folder, destFolder);
+        fs.copySync(folder, destFolder, {clobber: true, recursive: true});
         // For some reason the asynchronous 'copy' causes EPERM: not permitted errors
         // fs.copy(folder, destFolder, (err: Error) => {
         //     if (err) {

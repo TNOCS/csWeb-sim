@@ -1,0 +1,178 @@
+{
+    "featureTypes": {
+        "Event": {
+            "name": "Event",
+            "style": {
+                "iconUri": "images/c2000.png",
+                "iconWidth": 26,
+                "iconHeight": 26,
+                "strokeWidth": 2,
+                "strokeColor": "#000000",
+                "selectedStrokeColor": "#990000",
+                "fillColor": "#ddee22",
+                "opacity": 0.5,
+                "fillOpacity": 0.5,
+                "nameLabel": "name"
+            },
+            "propertyTypeKeys": "Name;name;id;status;date_start;date_end;stat_TOTAL;stat_OPEN;stat_ACCEPTED;stat_DECLINED;type;description;area;"
+        },
+        "Task": {
+            "name": "Task",
+            "style": {
+                "iconUri": "images/c2000.png",
+                "iconWidth": 26,
+                "iconHeight": 26,
+                "strokeWidth": 2,
+                "strokeColor": "#000000",
+                "selectedStrokeColor": "#990000",
+                "fillColor": "#999922",
+                "opacity": 0.8,
+                "fillOpacity": 0.8,
+                "nameLabel": "name"
+            },
+            "propertyTypeKeys": "Name;name;id;status;event_id;date_deadline;category;description;area;"
+        }
+    },
+    "propertyTypeData": {
+        "status": {
+            "label": "status",
+            "title": "Status",
+            "type": "text",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
+        "Name": {
+            "label": "Name",
+            "title": "Name",
+            "type": "text",
+            "visibleInCallOut": false,
+            "canEdit": true
+        },
+        "name": {
+            "label": "name",
+            "title": "Name",
+            "type": "text",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "id": {
+            "label": "id",
+            "title": "ID",
+            "type": "text",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "type": {
+            "label": "type",
+            "title": "Type",
+            "type": "text",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "date_start": {
+            "label": "date_start",
+            "languages": {
+                "nl": {
+                    "title": "Start datum"
+                },
+                "en": {
+                    "title": "Start date"
+                }
+            },
+            "type": "date",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
+        "date_end": {
+            "label": "date_end",
+            "languages": {
+                "nl": {
+                    "title": "Eind datum"
+                },
+                "en": {
+                    "title": "Eind date"
+                }
+            },
+            "type": "date",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
+        "date_deadline": {
+            "label": "date_deadline",
+            "languages": {
+                "nl": {
+                    "title": "Deadline datum"
+                },
+                "en": {
+                    "title": "Deadline date"
+                }
+            },
+            "type": "date",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
+        "description": {
+            "label": "description",
+            "languages": {
+                "nl": {
+                    "title": "Omschrijving"
+                },
+                "en": {
+                    "title": "Description"
+                }
+            },
+            "type": "textare",
+            "visibleInCallOut": true,
+            "canEdit": false
+        },
+        "area": {
+            "label": "area",
+            "title": "Area",
+            "type": "text",
+            "visibleInCallOut": false,
+            "canEdit": true
+        },
+        "event_id": {
+            "label": "event_id",
+            "title": "Event ID",
+            "type": "textarea",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "category": {
+            "label": "category",
+            "title": "Category",
+            "type": "text",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "stat_TOTAL": {
+            "label": "stat_TOTAL",
+            "title": "Total activated requests",
+            "type": "number",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "stat_OPEN": {
+            "label": "stat_OPEN",
+            "title": "Open requests",
+            "type": "number",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "stat_ACCEPTED": {
+            "label": "stat_ACCEPTED",
+            "title": "Accepted requests",
+            "type": "number",
+            "visibleInCallOut": true,
+            "canEdit": true
+        },
+        "stat_DECLINED": {
+            "label": "stat_DECLINED",
+            "title": "Declined requests",
+            "type": "number",
+            "visibleInCallOut": true,
+            "canEdit": true
+        }
+    }
+}

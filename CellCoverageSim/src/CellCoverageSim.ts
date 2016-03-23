@@ -238,7 +238,7 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
         this.sendAck(this.fsm.currentState);
     }
 
-    private initLayer(data: any) {
+    public initLayer(data: any) {
         this.coverageLayer = this.createCoverageLayer('', 'Coverage');
         this.gridHeader = data;
         this.coverageLayer.data = this.gridHeader;

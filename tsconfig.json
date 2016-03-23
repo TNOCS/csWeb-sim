@@ -17,6 +17,7 @@
   ],
   "files": [
     "server.ts",
+    "crowdtasker.ts",
     "CloudSim\\server.ts",
     "CommunicationSim\\server.ts",
     "CriticalObjectSim\\server.ts",

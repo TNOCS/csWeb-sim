@@ -1,0 +1,270 @@
+export function getData(request: any, dataParameters: any, cb: Function) {
+    if (typeof dataParameters !== 'object') return cb(null);
+    var options = {
+        json: true
+    };
+    Object.keys(dataParameters).forEach(key => {
+        options[key] = dataParameters[key];
+    });
+    if (options.hasOwnProperty('url')) {
+        options['baseUrl'] = JSON.parse(JSON.stringify(options['url']));
+    }
+
+    //Get events
+    options['uri'] = '/events?api_key=' + options['api_key'];
+    requestEvents(request, options, (eventFeatures) => {
+        if (typeof eventFeatures === 'number') {
+            cb(eventFeatures); // If http statuscode received, pass it through
+            return;
+        }
+        var processedEvents = 0;
+        eventFeatures.forEach((f: IFeature, fIndex) => {
+            // Get event stats
+            options['uri'] = ('/stats/activations/' + f['id'] + '?api_key=' + options['api_key']);
+            console.log(options['uri']);
+            requestEventStats(request, options, (eventStats: AStats) => {
+                processedEvents += 1;
+                var keys = Object.keys(eventStats);
+                for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+                    var key = keys[keyIndex];
+                    f.properties['stat_' + key] = eventStats[key];
+                }
+                if (processedEvents === eventFeatures.length - 1) {
+                    processTasks(request, options, eventFeatures, cb);
+                    // cb(eventFeatures);
+                }
+            });
+        })
+    });
+}
+
+// Get event tasks
+function processTasks(request, options, eventFeatures, cb) {
+    console.log('Process tasks');
+    var processedEvents = 0;
+    var allTaskFeatures = [];
+    eventFeatures.forEach((ef: IFeature, efIndex) => {
+        options['uri'] = `/tasks?event=${ef.id}&api_key=${options['api_key']}`;
+        console.log(options['uri']);
+        requestTasks(request, options, (taskFeatures: IFeature[]) => {
+            if (typeof taskFeatures === 'number') {
+                console.log('Error requesting tasks: ' + taskFeatures);
+            } else {
+                allTaskFeatures = allTaskFeatures.concat(taskFeatures);
+            }
+            processedEvents += 1;
+            console.log('processedEvents: ' + processedEvents + '\t allTaskFeatures: ' + allTaskFeatures.length);
+            if (processedEvents === eventFeatures.length) {
+                cb(eventFeatures.concat(allTaskFeatures));
+            }
+        });
+    });
+}
+
+
+// requestTaskFeedbacks(request, options, (taskFeedbacks: TFeedback) => {
+//                 var keys = Object.keys(taskFeedbacks);
+//                 keys.forEach((key, keyIndex) => {
+//                     f.properties['stat_' + key] = taskFeedbacks[key];
+//                     if (keyIndex === keys.length - 1) {
+//                         if (fIndex === taskFeatures.length - 1) {
+//                             cb(taskFeatures);
+//                         }
+//                     }
+//                 });
+//                 if (keys.length === 0) {
+//                     if (fIndex === taskFeatures.length - 1) {
+//                         cb(taskFeatures);
+//                     }
+//                 }
+//             });
+
+function requestEvents(request, options, cb) {
+    request.get(options, (err, response, data) => {
+        if (err || response.statusCode !== 200) {
+            cb([]);
+            return;
+        }
+        parseEventData(data, (features) => {
+            cb(features);
+        });
+    });
+}
+
+function requestTasks(request, options, cb) {
+    request.get(options, (err, response, data) => {
+        if (err || response.statusCode !== 200) {
+            cb([]);
+            return;
+        }
+        parseTaskData(data, (features) => {
+            cb(features);
+        });
+    });
+}
+
+function requestEventStats(request, options, cb) {
+    request.get(options, (err, response, data) => {
+        if (err || response.statusCode !== 200) {
+            cb(response.statusCode);
+            return;
+        }
+        if (!data || typeof data !== 'object') data = {};
+        cb(<AStats>data);
+    });
+}
+
+
+
+function parseEventData(data: any, callback: Function) {
+    console.log('Parse event data');
+    if (!data || !data.forEach) {
+        callback([]);
+        return;
+    }
+    var processedEvents = 0;
+    var eventFeatures = [];
+    data.forEach((e: Event, eventIndex) => {
+        var f = {
+            id: null,
+            type: 'Feature',
+            properties: {},
+            geometry: {}
+        };
+        var keys = Object.keys(e);
+        for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+            var key = keys[keyIndex];
+            if (key === 'area') {
+                var area: Area = e[key];
+                f.properties['area_description'] = area.description;
+                f.geometry = area.region;
+                delete f.geometry['crs']; // Should be an object according to GeoJSON specification
+            } else if (key === 'id') {
+                f.id = e[key];
+            } else { 
+                f.properties[key] = e[key];
+            }
+        }
+        processedEvents += 1;
+        eventFeatures.push(f);
+        if (processedEvents >= data.length) {
+            callback(eventFeatures);
+        }
+    });
+}
+
+function parseTaskData(data: any, callback: Function) {
+    console.log('Parse task data');
+    if (!data || !data.forEach) {
+        callback([]);
+        return;
+    }
+    var processedFeatures = 0;
+    var taskFeatures = [];
+    data.forEach((t: Task, eventIndex) => {
+        var f = {
+            id: null,
+            type: 'Feature',
+            properties: {},
+            geometry: {}
+        };
+        var keys = Object.keys(t);
+        for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+            var key = keys[keyIndex];
+            if (key === 'area') {
+                var area: Area = t[key];
+                f.properties['area_description'] = area.description;
+                f.geometry = area.region;
+                delete f.geometry['crs']; // Should be an object according to GeoJSON specification
+            } else if (key === 'id') {
+                f.id = t[key];
+            } else { 
+                f.properties[key] = t[key];
+            }
+        }
+        f.properties['featureTypeId'] = 'Task';
+        taskFeatures.push(f);
+        processedFeatures += 1;
+        if (processedFeatures >= data.length) {
+            callback(taskFeatures);
+        }
+    });
+    if (data.length === 0) {
+        callback(taskFeatures);
+    }
+}
+
+interface IFeature {
+    id: string;
+    type: string;
+    properties: {};
+    geometry: {
+        type: string;
+        coordinates: any[];
+    };
+};
+
+interface Event {
+    id: string;
+    name: string;
+    status: string; //[]"ACTIVE", "CLOSED"]
+    type: string; //['OTHER', 'CBRN', 'DROUGHT', 'EARTHQUAKE', 'FLOOD', 'HEAT', 'PANDEMIC']
+    date_start: string;
+    date_end: string;
+    description: string;
+    area: Area;
+};
+
+interface Area {
+    description: string;
+    region: PositionPolygon;
+};
+
+interface PositionPolygon {
+    type: string;
+    crs: string;
+    coordinates: Object;
+};
+
+interface AStats {
+    TOTAL: number;
+    OPEN: number;
+    ACCEPTED: number;
+    DECLINED: number;
+}
+
+interface Task {
+    id: string;
+    event_id: string;
+    name: string;
+    status: string;
+    description: string;
+    category: string;
+    date_deadline: string;
+    steps: Step[];
+    area: Area;
+}
+
+interface Step {
+    id: string;
+    name: string;
+    description: string;
+    template: string;
+    choices: string[];
+}
+
+interface TFeedback {
+    id: string;
+    task_id: string;
+    status: string;
+    publish_allowed: boolean;
+    date_completed: string;
+    feedbacks: FBContent[];
+}
+
+interface FBContent {
+    step_id: string;
+    position: PositionPolygon;
+    data: string;
+    attachment_id: string;
+}
