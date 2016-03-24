@@ -254,7 +254,7 @@ function parseFeedbackData(data: any, callback: Function) {
                         delete f.geometry['crs']; // Should be an object according to GeoJSON specification
                     } else if (key === 'attachment_id') {
                         f.properties[key] = fb[key];
-                        f.properties['attachment_url'] = `[url=data/api/attachments/${fb[key]}.jpg]Link[/url]`;
+                        f.properties['attachment_url'] = `[url=${_converterOptions.dataParameters.baseUrl}/data/api/attachments/${fb[key]}.jpg]Link[/url]`;
                         getAttachment(fb[key]);
                     } else { 
                         f.properties[key] = fb[key];
@@ -268,7 +268,7 @@ function parseFeedbackData(data: any, callback: Function) {
                         type: 'Point'
                     }
                 }
-                console.log(f.id);
+                // console.log(f.id);
                 feedbackFeatures.push(f);
             }
         }

@@ -214,6 +214,7 @@
         "attachment_url": {
             "label": "attachment_url",
             "title": "Attachment URL",
+            "description": "Link to the attachement",
             "type": "bbcode",
             "visibleInCallOut": true,
             "canEdit": true

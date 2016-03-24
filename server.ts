@@ -207,7 +207,9 @@ httpServer.listen(server.get('port'), () => {
         diffPropertiesBlacklist: [],
         url: "http://crowdtasker.ait.ac.at/be/api/",
         urlParams: {
-            attachmentPath: "public\\data\\api\\attachments"
+            api_key: "{{APIKEY}}",
+            attachmentPath: "public\\data\\api\\attachments",
+            baseUrl: "http://localhost:4567"
         }
     }
 
