@@ -288,30 +288,31 @@ function getAttachment(id: string) {
     if (!_converterOptions['dataParameters'].hasOwnProperty('attachmentPath')) return;
     var attachmentPath = _converterOptions['dataParameters']['attachmentPath'];
     var apiMan = _converterOptions['apiManager'];
-    var options = _converterOptions['options'];
+    var options = JSON.parse(JSON.stringify(_converterOptions['options']));
     var request = _converterOptions['request'];
     var fs = _converterOptions['fs'];
     
     // Check if file exists
     var file = `${attachmentPath}\\${id}.jpg`;
-    try  {
-        fs.accessSync(file);
-        console.log('Skipping attachment.');
-    } catch (error) {
-        fs.ensureFileSync(file);
-        options['uri'] = `/tasks/feedbacks/attachments/${id}?api_key=${options['api_key']}`;
-        request.get(options, (err, response, data) => {
-            if (err || response.statusCode !== 200) {
-                console.log('Error getting attachment.' + err);
-                return;
-            }
-            var fStream = fs.createWriteStream(file);
-            request(options).pipe(fStream).on('close', () => {
-                console.log('Written attachment.');
-                fStream.end();
+    fs.access(file, (err) => {
+        if (err) {
+            fs.ensureFileSync(file);
+            options['uri'] = `/tasks/feedbacks/attachments/${id}?api_key=${options['api_key']}`;
+            request.get(options, (err, response, data) => {
+                if (err || response.statusCode !== 200) {
+                    console.log('Error getting attachment.' + err);
+                    return;
+                }
+                var fStream = fs.createWriteStream(file);
+                request(options).pipe(fStream).on('close', () => {
+                    console.log('Written attachment.');
+                    fStream.end();
+                });
             });
-        });
-    }
+        } else {
+            console.log('Skipping attachment.');
+        }
+    });
 }
 
 interface IFeature {
