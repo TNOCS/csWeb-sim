@@ -1,4 +1,13 @@
 var _converterOptions;
+var fTemplate: IFeature = {
+    id: null,
+    type: 'Feature',
+    properties: {},
+    geometry: {
+        type: null,
+        coordinates: null
+    }
+};
 export function getData(request: any, dataParameters: any, converterOptions: any, cb: Function) {
     if (typeof dataParameters !== 'object') return cb(null);
     _converterOptions = converterOptions;
@@ -73,6 +82,10 @@ function processFeedbacks(request, options, eventFeatures, taskFeatures, cb) {
     var processedTasks = 0;
     var allFeedbacks = [];
     taskFeatures.forEach((t: IFeature, tIndex) => {
+        if (t.properties['featureTypeId'] && t.properties['featureTypeId'] !== 'Task') {
+            processedTasks += 1;
+            return;
+        }
         options['uri'] = `/tasks/feedbacks?task=${t.id}&api_key=${options['api_key']}`;
         console.log(options['uri']);
         requestFeedbacks(request, options, (feedbackFeatures: IFeature[]) => {
@@ -147,12 +160,7 @@ function parseEventData(data: any, callback: Function) {
     var processedEvents = 0;
     var eventFeatures = [];
     data.forEach((e: Event, eventIndex) => {
-        var f = {
-            id: null,
-            type: 'Feature',
-            properties: {},
-            geometry: {}
-        };
+        var f = JSON.parse(JSON.stringify(fTemplate));
         var keys = Object.keys(e);
         for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
             var key = keys[keyIndex];
@@ -160,6 +168,7 @@ function parseEventData(data: any, callback: Function) {
                 var area: Area = e[key];
                 f.properties['area_description'] = area.description;
                 f.geometry = area.region;
+                f.geometry['type'] = 'MultiLineString';
                 delete f.geometry['crs']; // Should be an object according to GeoJSON specification
             } else if (key === 'id') {
                 f.id = e[key];
@@ -167,6 +176,7 @@ function parseEventData(data: any, callback: Function) {
                 f.properties[key] = e[key];
             }
         }
+        f.properties['featureTypeId'] = 'Event';
         processedEvents += 1;
         eventFeatures.push(f);
         if (processedEvents >= data.length) {
@@ -182,13 +192,9 @@ function parseTaskData(data: any, callback: Function) {
     }
     var processedFeatures = 0;
     var taskFeatures = [];
+    var stepFeatures = [];
     data.forEach((t: Task, eventIndex) => {
-        var f = {
-            id: null,
-            type: 'Feature',
-            properties: {},
-            geometry: {}
-        };
+        var f = JSON.parse(JSON.stringify(fTemplate));
         var keys = Object.keys(t);
         for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
             var key = keys[keyIndex];
@@ -196,9 +202,27 @@ function parseTaskData(data: any, callback: Function) {
                 var area: Area = t[key];
                 f.properties['area_description'] = area.description;
                 f.geometry = area.region;
+                f.geometry['type'] = 'MultiLineString';
                 delete f.geometry['crs']; // Should be an object according to GeoJSON specification
             } else if (key === 'steps') {
-                f.properties[key] = JSON.stringify(t[key], null, 2);
+                for (var c = 0; c < t['steps'].length; c++) {
+                    var fStep = JSON.parse(JSON.stringify(fTemplate));
+                    var step = t['steps'][c];
+                    for (var propInd = 0; propInd < Object.keys(step).length; propInd++) {
+                        var stepKey = keys[propInd];
+                        if (stepKey === 'choices') {
+                            fStep.properties[stepKey] = JSON.stringify(step[stepKey], null, 2);
+                        } else if (stepKey === 'id') {
+                            fStep.id = step[stepKey];
+                        } else { 
+                            fStep.properties[stepKey] = step[stepKey];
+                        }
+                    }                
+                    delete fStep.geometry;
+                    fStep.properties['task_id_step'] = t['id'];
+                    fStep.properties['featureTypeId'] = 'Step';
+                    stepFeatures.push(fStep);
+                }
             } else if (key === 'id') {
                 f.id = t[key];
             } else { 
@@ -209,11 +233,11 @@ function parseTaskData(data: any, callback: Function) {
         taskFeatures.push(f);
         processedFeatures += 1;
         if (processedFeatures >= data.length) {
-            callback(taskFeatures);
+            callback(taskFeatures.concat(stepFeatures));
         }
     });
     if (data.length === 0) {
-        callback(taskFeatures);
+        callback(taskFeatures.concat(stepFeatures));
     }
 }
 
@@ -228,12 +252,7 @@ function parseFeedbackData(data: any, callback: Function) {
         if (tf.hasOwnProperty('feedbacks') && tf.feedbacks.length > 0) {
             for (var fbCount = 0; fbCount < tf.feedbacks.length; fbCount++) {
                 var fb: FBContent = tf.feedbacks[fbCount];
-                var f = {
-                    id: null,
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {}
-                };
+                var f = JSON.parse(JSON.stringify(fTemplate));
                 // Add feedback parameters
                 var tfKeys = Object.keys(tf);
                 for (var keyIndex = 0; keyIndex < tfKeys.length; keyIndex++) {
@@ -261,14 +280,9 @@ function parseFeedbackData(data: any, callback: Function) {
                     }
                 }
                 f.properties['featureTypeId'] = 'Feedback';
-                // Ensure a position
-                if (!f.geometry.hasOwnProperty('coordinates')) {
-                    f.geometry = {
-                        coordinates: [5, 52],
-                        type: 'Point'
-                    }
+                if (!f.geometry.coordinates) {
+                    delete f.geometry;
                 }
-                // console.log(f.id);
                 feedbackFeatures.push(f);
             }
         }
