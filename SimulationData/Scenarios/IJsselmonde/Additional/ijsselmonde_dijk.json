@@ -4,7 +4,8 @@
             "type" : "Feature",
             "properties" : {
                 "featureTypeId" : "Breslocatie",
-                "Name" : "14.1 km"
+                "Name" : "Zwakke plek in dijk",
+                "Locatie" : "14.1 km"
             },
             "geometry" : {
                 "type" : "Point",
@@ -17,7 +18,8 @@
             "type" : "Feature",
             "properties" : {
                 "featureTypeId" : "Breslocatie",
-                "Name" : "47 km"
+                "Name" : "Zwakke plek in dijk",
+                "Locatie" : "47 km"
             },
             "geometry" : {
                 "type" : "Point",
