@@ -250,7 +250,7 @@ export class SimServiceManager extends csweb.ApiManager {
             if (simState.hasOwnProperty('simCmd')) {
                 this.simCmd = SimCommand[simState.simCmd];
                 if (typeof this.simCmd === 'undefined') {
-                    Winston.warn('${this.name}: Received unknown sim command ' + simState.simCmd);
+                    Winston.warn(`${this.name}: Received unknown sim command ` + simState.simCmd);
                     return;
                 }
                 Winston.info(`${this.name}: new command is ${SimCommand[this.simCmd]}`);
