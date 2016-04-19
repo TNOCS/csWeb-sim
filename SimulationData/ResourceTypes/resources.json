@@ -12,7 +12,13 @@
         "iconUri": "images/gemeente.png",
         "nameLabel": "Name",
         "maxTitleResolution": -1
-      }
+      },
+      "legendExpr": [{
+        "title": "Aantal inwoners",
+        "type": "number",
+        "stringFormat": "{0:#,#}",
+        "expression": "sum(features, 'aant_inw')"
+      }]
     },
     "wijk": {
       "name": "Wijk",
@@ -25,9 +31,15 @@
         "iconHeight": 32,
         "iconUri": "images/gemeente.png",
         "nameLabel": "wk_code",
-        "propertyTypeKeys": "wk_code;wk_naam;gm_code;gm_naam;ind_wbi;water;oad;sted;aant_inw;aant_man;aant_vrouw;p_00_14_jr;p_15_24_jr;p_25_44_jr;p_45_64_jr;p_65_eo_jr;p_ongehuwd;p_gehuwd;p_gescheid;p_verweduw;bev_dichth;aantal_hh;p_eenp_hh;p_hh_z_k;p_hh_m_k;gem_hh_gr;p_west_al;p_n_w_al;p_marokko;p_ant_aru;p_surinam;p_turkije;p_over_nw;ao_uit_tot;ww_uit_tot;wwb_uittot;a_soz_ow;auto_tot;auto_hh;auto_land;bedr_auto;motor_2w;a_lftj6j;a_lfto6j;a_bst_b;a_bst_nb;opp_tot;opp_land;opp_water",
+        "propertyTypeKeys": "wk_code;wk_naam;gm_code;gm_naam;ind_wbi;water;oad;sted;aant_inw;aant_man;aant_vrouw;p_00_14_jr;p_15_24_jr;p_25_44_jr;p_45_64_jr;p_65_eo_jr;a_65_eo_jr;p_ongehuwd;p_gehuwd;p_gescheid;p_verweduw;bev_dichth;aantal_hh;p_eenp_hh;p_hh_z_k;p_hh_m_k;gem_hh_gr;p_west_al;p_n_w_al;p_marokko;p_ant_aru;p_surinam;p_turkije;p_over_nw;ao_uit_tot;ww_uit_tot;wwb_uittot;a_soz_ow;auto_tot;auto_hh;auto_land;bedr_auto;motor_2w;a_lftj6j;a_lfto6j;a_bst_b;a_bst_nb;opp_tot;opp_land;opp_water",
         "maxTitleResolution": -1
-      }
+      },
+      "legendExpr": [{
+        "title": "Aantal inwoners",
+        "type": "number",
+        "stringFormat": "{0:#,#}",
+        "expression": "sum(features, 'aant_inw')"
+      }]
     },
     "buurt": {
       "name": "Buurt",
@@ -42,7 +54,13 @@
         "nameLabel": "bu_code",
         "propertyTypeKeys": "bu_code;bu_naam;wk_code;gm_code;gm_naam;ind_wbi;water;oad;sted;aant_inw;aant_man;aant_vrouw;p_00_14_jr;p_15_24_jr;p_25_44_jr;p_45_64_jr;p_65_eo_jr;p_ongehuwd;p_gehuwd;p_gescheid;p_verweduw;bev_dichth;aantal_hh;p_eenp_hh;p_hh_z_k;p_hh_m_k;gem_hh_gr;p_west_al;p_n_w_al;p_marokko;p_ant_aru;p_surinam;p_turkije;p_over_nw;ao_uit_tot;ww_uit_tot;wwb_uittot;a_soz_ow;auto_tot;auto_hh;auto_land;bedr_auto;motor_2w;a_lftj6j;a_lfto6j;a_bst_b;a_bst_nb;opp_tot;opp_land;opp_water",
         "maxTitleResolution": -1
-      }
+      },
+      "legendExpr": [{
+        "title": "Aantal inwoners",
+        "type": "number",
+        "stringFormat": "{0:#,#}",
+        "expression": "sum(features, 'aant_inw')"
+      }]
     },
     "plane": {
       "name": "Vliegtuig",
@@ -273,6 +291,17 @@
       "title": "Leeftijd 65 jaar en ouder",
       "section": "CBS",
       "stringFormat": "{0}%",
+      "visibleInCallOut": true,
+      "canEdit": true,
+      "isSearchable": false
+    },
+    "a_65_eo_jr": {
+      "label": "a_65_eo_jr",
+      "type": "number",
+      "title": "Leeftijd 65 jaar en ouder",
+      "section": "CBS",
+      "stringFormat": "{0:#,#}",
+      "expression": "properties.aant_inw * properties.p_65_eo_jr / 100",
       "visibleInCallOut": true,
       "canEdit": true,
       "isSearchable": false

@@ -917,19 +917,32 @@
             "clustering": false,            
             "layers": [
                 {
-                    "id": "news",
-                    "title": "Nieuws",
+                    "id": "morning_north",
+                    "title": "Morning sectors",
+                    "description": "",
                     "type": "geojson",
                     "renderType": "geojson",
-                    "showFeatureNotifications": false,
-                    "url": "data/src/news.json",
-                    "typeUrl": "data/resourceTypes/news.json",
-                    "defaultFeatureType": "news",
-                    "opacity": 99,
-                    "fitToMap": false,
+                    "heatmapItems": null,
+                    "url": "data/layers/morning_north.json",
+                    "typeUrl": "data/resourceTypes/resources.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "gemeente",
                     "isDynamic": false,
-                    "gui": {},
-                    "tags": []
+                    "timeAware": false
+                },
+                {
+                    "id": "afternoon_south",
+                    "title": "Afternoon sectors",
+                    "description": "",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/afternoon_south.json",
+                    "typeUrl": "data/resourceTypes/resources.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "gemeente",
+                    "isDynamic": false,
+                    "timeAware": false
                 },
                 {
                     "id": "omtrek",
@@ -942,20 +955,6 @@
                     "defaultFeatureType": "omtrek",
                     "opacity": 40,
                     "fitToMap": true,
-                    "isDynamic": false,
-                    "gui": {},
-                    "tags": []
-                },
-                {
-                    "id": "dijken",
-                    "title": "Dijken met zwakke plekken",
-                    "type": "geojson",
-                    "renderType": "geojson",
-                    "showFeatureNotifications": false,
-                    "url": "data/layers/ijsselmonde_dijk.json",
-                    "typeUrl": "data/resourceTypes/Dike.json",
-                    "opacity": 95,
-                    "fitToMap": false,
                     "isDynamic": false,
                     "gui": {},
                     "tags": []
@@ -1002,83 +1001,6 @@
                     "opacity": 70,
                     "fitToMap": false,
                     "isDynamic": false,
-                    "gui": {},
-                    "tags": []
-                },
-                {
-                    "id": "floodsim_prob",
-                    "title": "Overstromingswaarschijnlijkheid",
-                    "description": "Overstromingswaarschijnlijkheid.",
-                    "type": "grid",
-                    "renderType": "gridlayer",
-                    "heatmapItems": null,
-                    "url": "/api/layers/floodsim",
-                    "typeUrl": "/api/resources/floodsimtypes",
-                    "opacity": 75,
-                    "dataSourceParameters": {
-                        "propertyName": "p",
-                        "gridType": "esri",
-                        "projection": "WGS84",
-                        "contourLevels": [
-                            0,
-                            20,
-                            40,
-                            60,
-                            80,
-                            100
-                        ],
-                        "legend": {
-                            "id": "Kans",
-                            "visualAspect": "fillColor",
-                            "description": "Kans [%]",
-                            "legendKind": "interpolated",
-                            "legendEntries": [
-                                {
-                                    "label": "0",
-                                    "value": 0,
-                                    "color": "#00ff00"
-                                },
-                                {
-                                    "label": "20",
-                                    "value": 20,
-                                    "color": "#44aa00"
-                                },
-                                {
-                                    "label": "40",
-                                    "value": 40,
-                                    "color": "#777700"
-                                },
-                                {
-                                    "label": "60",
-                                    "value": 60,
-                                    "color": "#aa5500"
-                                },
-                                {
-                                    "label": "80",
-                                    "value": 80,
-                                    "color": "#cc3300"
-                                },
-                                {
-                                    "label": "100",
-                                    "value": 100,
-                                    "color": "#ff0000"
-                                }
-                            ]
-                        },
-                        "skipLines": 6,
-                        "columns": 380,
-                        "rows": 206,
-                        "deltaLon": 0.0014584288488676631,
-                        "deltaLat": -0.0008877224387042511,
-                        "noDataValue": -9999,
-                        "startLon": 4.624165116053319,
-                        "startLat": 51.99900160775284,
-                        "maxThreshold": 5.25,
-                        "minThreshold": -9999
-                    },
-                    "defaultFeatureType": "floodingprobability",
-                    "defaultLegendProperty": "p",
-                    "isDynamic": true,
                     "gui": {},
                     "tags": []
                 }
