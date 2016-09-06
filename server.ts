@@ -90,17 +90,17 @@ floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () =
     // floodSim.start();
 });
 
-/** Start CloudSim server */
-var cloudSim = new CloudSim.CloudSim('cs', 'CloudSim', false, <csweb.IApiManagerOptions>{
-    server: `${csweb.getIPAddress() }:${port}`,
-    mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/keys/sim/cloudSimCmd']
-});
-cloudSim.init(path.join(path.resolve(__dirname), './CloudSim/public/data'), () => {
-    // cloudSim.addConnector('rest', new RestAPI.RestAPI(server), {});
-    cloudSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
-    // cloudSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './CloudSim/public/data/')), {});
-    // cloudSim.start();
-});
+// /** Start CloudSim server */
+// var cloudSim = new CloudSim.CloudSim('cs', 'CloudSim', false, <csweb.IApiManagerOptions>{
+//     server: `${csweb.getIPAddress() }:${port}`,
+//     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/keys/sim/cloudSimCmd']
+// });
+// cloudSim.init(path.join(path.resolve(__dirname), './CloudSim/public/data'), () => {
+//     // cloudSim.addConnector('rest', new RestAPI.RestAPI(server), {});
+//     cloudSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
+//     // cloudSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './CloudSim/public/data/')), {});
+//     // cloudSim.start();
+// });
 
 /** Start CommunicationSim server */
 var communicationSim = new CommunicationSim.CommunicationSim('cs', 'CommunicationSim', false, <csweb.IApiManagerOptions>{
@@ -179,8 +179,8 @@ var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,
         'ElectricalNetwork': electricalNetworkSim,
         'CriticalObjects': criticalObjectSim,
         'HazardousObjects': hazardousObjectSim,
-        'Roads': roadSim,
-        'GasCloud': cloudSim
+        'Roads': roadSim//,
+        //'GasCloud': cloudSim
     },
     {
         server: `${csweb.getIPAddress() }:${port}`,
@@ -199,24 +199,24 @@ api.init(path.join(path.resolve(__dirname), 'public/data'), () => {
 httpServer.listen(server.get('port'), () => {
     Winston.info('Express server listening on port ' + server.get('port'));
     
-    var restSourceOptions: csweb.IRestDataSourceSettings = {
-        converterFile: path.join(__dirname, './crowdtasker.js'),
-        pollIntervalSeconds: 60,
-        pruneIntervalSeconds: 300,
-        diffIgnoreGeometry: false,
-        diffPropertiesBlacklist: [],
-        url: "http://crowdtasker.ait.ac.at/be/api/",
-        urlParams: {
-            api_key: "{{APIKEY}}",
-            attachmentPath: "public\\data\\api\\attachments",
-            baseUrl: "http://localhost:4567"
-        }
-    }
+    // var restSourceOptions: csweb.IRestDataSourceSettings = {
+    //     converterFile: path.join(__dirname, './crowdtasker.js'),
+    //     pollIntervalSeconds: 60,
+    //     pruneIntervalSeconds: 300,
+    //     diffIgnoreGeometry: false,
+    //     diffPropertiesBlacklist: [],
+    //     url: "http://crowdtasker.ait.ac.at/be/api/",
+    //     urlParams: {
+    //         api_key: "9319559c3102d1b0205a6f52e854707da076e7de",
+    //         attachmentPath: "public\\data\\api\\attachments",
+    //         baseUrl: "http://localhost:4567"
+    //     }
+    // }
 
-    setTimeout(() => {
-        var restSource = new csweb.RestDataSource(server, api, 'crowdtasker', '/crowdtasker');
-        restSource.init(restSourceOptions, (msg: string) => {
-            Winston.info('RestDataSource: ' + msg);
-        });
-    }, 4000);
+    // setTimeout(() => {
+    //     var restSource = new csweb.RestDataSource(server, api, 'crowdtasker', '/crowdtasker');
+    //     restSource.init(restSourceOptions, (msg: string) => {
+    //         Winston.info('RestDataSource: ' + msg);
+    //     });
+    // }, 4000);
 });

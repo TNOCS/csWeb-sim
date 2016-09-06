@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -35,7 +36,7 @@ var Transitions = (function () {
         this.fsm.addTransitions(this);
     };
     return Transitions;
-})();
+}());
 exports.Transitions = Transitions;
 /**
  * Internal representation of a transition function
@@ -54,7 +55,7 @@ var TransitionFunction = (function () {
         this.to = to;
     }
     return TransitionFunction;
-})();
+}());
 exports.TransitionFunction = TransitionFunction;
 var TransitionFunctions = (function (_super) {
     __extends(TransitionFunctions, _super);
@@ -71,7 +72,7 @@ var TransitionFunctions = (function (_super) {
         });
     };
     return TransitionFunctions;
-})(Array);
+}(Array));
 exports.TransitionFunctions = TransitionFunctions;
 /***
  * A simple finite state machine implemented in TypeScript, the templated argument is meant to be used
@@ -262,6 +263,6 @@ var FiniteStateMachine = (function () {
         }
     };
     return FiniteStateMachine;
-})();
+}());
 exports.FiniteStateMachine = FiniteStateMachine;
 //# sourceMappingURL=typestate.js.map

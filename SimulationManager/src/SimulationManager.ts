@@ -4,7 +4,7 @@ import TypeState = require('../../SimulationService/state/typestate');
 import csweb = require('csweb');
 import SimSvc = require('../../SimulationService/api/SimServiceManager');
 import HyperTimer = require('hypertimer');
-import fs = require('fs-extra');
+import * as fs from "fs-extra";
 
 
 /** Defines the types of simulationservices available in a scenario */
