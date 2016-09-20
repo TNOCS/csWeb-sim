@@ -182,6 +182,6 @@
         }
     ],
     "storage": "file",
-    "_localFile": "C:\\Users\\rbruining\\Documents\\TNO\\csMaster\\csWeb-sim\\public\\data\\projects\\SimMan.json",
+    "_localFile": "C:\\dev\\apps\\csWeb-sim\\public\\data\\projects\\SimMan.json",
     "url": "/api/projects/SimMan"
 }

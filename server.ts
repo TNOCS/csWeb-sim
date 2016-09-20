@@ -5,7 +5,7 @@ import http = require('http');
 import path = require('path');
 import Winston = require('winston');
 
-import csweb = require('csweb');
+import * as csweb from "csweb";
 
 import FloodSim = require('./FloodSim/src/FloodSim');
 import CloudSim = require('./CloudSim/src/CloudSim');

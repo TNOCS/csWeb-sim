@@ -13,10 +13,12 @@
   "files": [
     "./public/bower_components/csweb/dist-bower/csComp.d.ts",
     "./typings/index.d.ts",
-    "./Helpers/DateUtils.d.ts"
+    "./Helpers/DateUtils.d.ts",
+    "./server.ts"
   ],
   "include": [
-    "node_modules/**/*.json",
+    "public/app/**/*.ts",
+    "public/translations/**/*.ts",
     "CellCoverageSim/**/*.ts",
     "CloudSim/**/*.ts",
     "CommunicationSim/**/*.ts",
@@ -26,12 +28,14 @@
     "HazardousObjectSim/**/*.ts",
     "Helpers/**/*.ts",
     "RoadSim/**/*.ts",
-    "./*.ts"
+    "SimulationManager/**/*.ts",
+    "SimulationService/**/*.ts"
   ],
   "exclude": [
-    "./public/bower_components/**/*.*",
+    "../csWeb/out/**/*.*",
     "./node_modules/**/*.ts",
     "./node_modules/**/*.d.ts",
-    "../csWeb/**/*"
+    "./dist/**/*.*",
+    "./public/bower_components/**/*.d.ts"
   ]
 }

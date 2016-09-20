@@ -17,8 +17,10 @@ ServerComponents/
 *.js.map
 public/data/keys/
 public/data/layers/
+public/data/resourceTypes/
 test.js
 *.geojson
+CellCoverageSim/**/*.js
 CloudSim/**/*.js
 CommunicationSim/**/*.js
 CriticalObjectSim/**/*.js
@@ -26,9 +28,15 @@ ElectricalNetworkSim/**/*.js
 FloodSim/**/*.js
 HazardousObjectSim/**/*.js
 RoadSim/**/*.js
+Helpers/**/*.js
+SimulationManager/**/*.js
+SimulationService/**/*.js
+public/**/*.js
+typings/**/*.*
 **/tsconfig.json
 Scripts/typings/
 SimulationData/Scenarios/IJsselmonde/Flooding/ijsselmonde_p50/Superfluous/
 SimulationData/Scenarios/IJsselmonde/Flooding/probability/Superfluous/025.asc
 SimulationData/Scenarios/IJsselmonde/Flooding/probability/Superfluous/
 public/data/api/attachments/
+crowdtasker.js
