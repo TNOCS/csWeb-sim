@@ -18,6 +18,7 @@ ServerComponents/
 public/data/keys/
 public/data/layers/
 public/data/resourceTypes/
+public/data/backup/
 test.js
 *.geojson
 CellCoverageSim/**/*.js
@@ -40,3 +41,4 @@ SimulationData/Scenarios/IJsselmonde/Flooding/probability/Superfluous/025.asc
 SimulationData/Scenarios/IJsselmonde/Flooding/probability/Superfluous/
 public/data/api/attachments/
 crowdtasker.js
+SimulationData/Scenarios/Waterwolf/Flooding/Uitdammerdijk/backup/

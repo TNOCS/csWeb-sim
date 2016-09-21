@@ -27,7 +27,7 @@ export class ElectricalNetworkSim extends SimSvc.SimServiceManager {
         super(namespace, name, isClient, options);
 
         this.subscribeKey('sim.PowerStationCmd', <csweb.ApiMeta>{}, (topic: string, message: string, params: Object) => {
-            Winston.info(`Topic: ${topic}, Msg: ${JSON.stringify(message, null, 2) }, Params: ${params ? JSON.stringify(params, null, 2) : '-'}.`)
+            Winston.info(`Topic: ${topic}, Msg: ${JSON.stringify(message, null, 2)}, Params: ${params ? JSON.stringify(params, null, 2) : '-'}.`)
             if (message.hasOwnProperty('powerStation') && message.hasOwnProperty('state')) {
                 var name = message['powerStation'];
                 this.powerStations.some(ps => {
@@ -212,8 +212,8 @@ export class ElectricalNetworkSim extends SimSvc.SimServiceManager {
             }
             let ps = JSON.parse(data.toString());
             this.powerLayer = this.createNewLayer('powerstations', 'Stroomstations', ps.features, 'Elektrische stroomstations');
-            this.powerLayer.features.forEach(f => {
-                if (!f.id) f.id = csweb.newGuid();
+            this.powerLayer.features.forEach((f, ind) => {
+                f.id = `pwr_stn_${ind}`;
                 if (f.geometry.type !== 'Point') return;
                 this.setFeatureState(f, SimSvc.InfrastructureState.Ok);
                 this.powerStations.push(f);
@@ -239,7 +239,7 @@ export class ElectricalNetworkSim extends SimSvc.SimServiceManager {
     private publishPowerSupplyArea(feature: csweb.Feature) {
         var state = this.getFeatureState(feature);
         if (state === SimSvc.InfrastructureState.Failed && feature.properties.hasOwnProperty('powerSupplyArea')
-             && this.publishedAreas.indexOf(feature.id) < 0) {
+            && this.publishedAreas.indexOf(feature.id) < 0) {
             var psa = new csweb.Feature();
             psa.id = csweb.newGuid();
             psa.properties = {

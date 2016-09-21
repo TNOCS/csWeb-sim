@@ -263,10 +263,10 @@ export class RoadSim extends SimSvc.SimServiceManager {
             }
             let ro = JSON.parse(data.toString());
             this.roadObjectsLayer = this.createNewLayer('roadobjects', 'Wegen', ro.features);
-            this.roadObjectsLayer.features.forEach(f => {
-                if (!f.id) f.id = csweb.newGuid();
-                if (f.geometry.type !== 'LineString') return;
+            this.roadObjectsLayer.features.forEach((f, ind) => {
+                f.id = `road_${ind}`;
                 this.setFeatureState(f, SimSvc.InfrastructureState.Ok);
+                if (f.geometry.type !== 'LineString') return;
                 this.roadObjects.push(f);
             });
 

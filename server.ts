@@ -86,6 +86,7 @@ var floodSim = new FloodSim.FloodSim('cs', 'FloodSim', false, <csweb.IApiManager
 floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () => {
     // floodSim.addConnector('rest', new RestAPI.RestAPI(server), {});
     floodSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
+    floodSim.addConnector('socketio', new csweb.SocketIOAPI(cm), {});
     // floodSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './FloodSim/public/data/')), {});
     // floodSim.start();
 });

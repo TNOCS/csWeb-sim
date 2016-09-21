@@ -247,9 +247,11 @@ export class FloodSim extends SimSvc.SimServiceManager {
     private updateFloodLayer(timeStamp: number, data: string) {
         var layer: csweb.ILayer = _.clone(this.pubFloodingScenario.layer);
         layer.data = data;
-        layer.url = '';
+        layer.url = '/api/layers/floodsim';
+        layer.id = 'floodsim';
         this.pubFloodingScenario.timeStamp = timeStamp;
         this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
+        this.updateFeature(layer.id, layer, <csweb.ApiMeta>{}, () => { });
     }
 
     private extractTimeStamp(filename: string) {

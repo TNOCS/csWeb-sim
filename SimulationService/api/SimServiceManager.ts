@@ -26,11 +26,11 @@ export enum SimState {
 /** In what state is the (critical) infrastructure */
 export enum InfrastructureState {
     /** 100% functional */
-    Ok,
+    Ok = 0,
     /** Still working, but partially failing */
-    Stressed,
+    Stressed = 1,
     /** Not working anymore */
-    Failed
+    Failed = 2
 }
 
 /** When the infrastructure is stressed or has failed, what was the cause of its failure. */

@@ -1,0 +1,447 @@
+{
+	"type" : "FeatureCollection",
+	"features" : [{
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Diemen DM34",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [5.0218, 52.33852, 38]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Diemen",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [5.01504, 52.33721, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Oostzaan",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.87621, 52.42898, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Diemen DM33",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [5.0202, 52.33922, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Hemweg HW7",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.84708, 52.40529, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Klaproosweg",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.90305, 52.40139, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Watergraafsmeer",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.96272, 52.35493, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Hemweg",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.84681, 52.40324, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Hoogte Kadijk",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.91948, 52.36755, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Nieuwe Meer",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.8133, 52.33689, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Papaverweg",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.9034, 52.39821, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Wijdewormer",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.90589, 52.50793, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Zorgvlied",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.88809, 52.33643, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "AEB-5",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.8442, 52.40601, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "AEB-6",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.8433, 52.40553, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Basisweg",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.81294, 52.38962, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Fredriksplein",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.89504, 52.36059, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "IJpolder",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.8029, 52.41456, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "JH Global Switch",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.82883, 52.345, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Karperweg",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.85486, 52.34776, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Marnixstraat",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.87597, 52.37046, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Rhijnspoor",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.90877, 52.35818, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Schaepmanstraat",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.93709, 52.51118, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Schipluidenlaan",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.8352, 52.35571, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Slotermeer",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.83491, 52.37458, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Uilenburg",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.90631, 52.37066, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Vliegenbos",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.9294, 52.38691, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Westhaven",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.836, 52.40771, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Westzaanstraat",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.88212, 52.38839, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "WKC",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.96698, 52.50134, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Wormerveer",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.80768, 52.48813, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Zaandam Noord",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.81669, 52.45861, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Zaandam West",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.82061, 52.43199, 0]
+			}
+		}, {
+			"type" : "Feature",
+			"properties" : {
+				"featureTypeId" : "powerstation_{state}",
+				"timespan" : null,
+				"_dep_water" : 0.2,
+				"Name" : "Zaandijk",
+				"_dep_features" : "[]"
+			},
+			"geometry" : {
+				"type" : "Point",
+				"coordinates" : [4.82738, 52.47108, 0]
+			}
+		}
+	]
+}

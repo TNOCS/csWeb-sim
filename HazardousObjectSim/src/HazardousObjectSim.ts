@@ -221,8 +221,8 @@ export class HazardousObjectSim extends SimSvc.SimServiceManager {
             }
             let ho = JSON.parse(data.toString());
             this.hazardousObjectsLayer = this.createNewLayer('hazardousobjects', 'Gevaarlijke objecten', ho.features);
-            this.hazardousObjectsLayer.features.forEach(f => {
-                if (!f.id) f.id = csweb.newGuid();
+            this.hazardousObjectsLayer.features.forEach((f, ind) => {
+                f.id = `haz_obj_${ind}`;
                 if (f.geometry.type !== 'Point') return;
                 this.setFeatureState(f, SimSvc.InfrastructureState.Ok);
                 this.hazardousObjects.push(f);

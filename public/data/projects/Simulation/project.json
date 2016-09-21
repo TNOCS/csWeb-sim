@@ -6,6 +6,26 @@
     "url": "https://github.com/TNOCS/csMap",
     "connected": true,
     "eventTab": true,
+    "maxBounds": {
+        "southWest": [
+            44,
+            -2
+        ],
+        "northEast": [
+            56,
+            25
+        ]
+    },
+    "viewBounds": {
+        "southWest": [
+            52.1,
+            4.55
+        ],
+        "northEast": [
+            52.8,
+            5.35
+        ]
+    },
     "timeLine": {
         "start": 1445288169205,
         "end": 1445892969205,
@@ -29,7 +49,7 @@
             "editMode": false,
             "showMap": true,
             "showTimeline": true,
-            "showLeftmenu": true,
+            "showLeftmenu": false,
             "showLegend": false,
             "showRightmenu": false,
             "showBackgroundImage": false,
@@ -43,12 +63,21 @@
                     "style": "default",
                     "left": "20px",
                     "right": "",
-                    "top": "190px",
+                    "top": "240px",
                     "width": "340px",
                     "height": "430px",
                     "data": {
                         "smallSize": false,
                         "messages": [
+                            {
+                                "name": "Start scenario Waterwolf",
+                                "httpMethod": {
+                                    "name": "POST"
+                                },
+                                "url": "/api/keys/Sim.Job",
+                                "message": "{ \"start\": \"waterwolf\"}",
+                                "description": "Start scenario"
+                            },
                             {
                                 "name": "Start scenario Haaglanden",
                                 "httpMethod": {
@@ -108,9 +137,9 @@
                     "elementId": "widget-f38c1b7d-40b7-4e03-1349-7d0c0876091b",
                     "enabled": true,
                     "style": "default",
-                    "left": "20px",
-                    "right": "",
-                    "top": "25px",
+                    "left": "",
+                    "right": "60px",
+                    "top": "470px",
                     "width": "340px",
                     "height": "140px",
                     "data": {
@@ -127,14 +156,23 @@
                     "elementId": "widget-9371825f-2762-4dbf-ec41-867231fb40d7",
                     "enabled": true,
                     "style": "default",
-                    "left": "20px",
-                    "right": "",
-                    "top": "190px",
+                    "left": "",
+                    "right": "60px",
+                    "top": "630px",
                     "width": "340px",
                     "height": "85px",
                     "data": {
                         "smallSize": true,
                         "messages": [
+                            {
+                                "name": "Start flooding Uitdammerdijk",
+                                "httpMethod": {
+                                    "name": "POST"
+                                },
+                                "url": "/api/keys/sim.floodSimCmd",
+                                "message": "{ \"scenario\": \"Uitdammerdijk\"}",
+                                "description": "Start the Uitdammerdijk flooding scenario provided by 3Di"
+                            },
                             {
                                 "name": "Start flooding Kijkduin",
                                 "httpMethod": {
@@ -531,13 +569,13 @@
         {
             "id": "76947763-7f29-4fa7-05af-901a08bc506d",
             "languages": {
-                        "en": {
-                            "title": "Causes"
-                        },
-                        "nl": {
-                            "title": "Oorzaken"
-                        }
-                    },
+                "en": {
+                    "title": "Causes"
+                },
+                "nl": {
+                    "title": "Oorzaken"
+                }
+            },
             "layers": [
                 {
                     "id": "floodsim",
@@ -569,85 +607,18 @@
                             6
                         ],
                         "skipLines": 6,
-                        "columns": 380,
-                        "rows": 206,
+                        "columns": 561,
+                        "rows": 278,
                         "deltaLon": 0.0014584288488676631,
                         "deltaLat": -0.0008877224387042511,
                         "noDataValue": -9999,
                         "startLon": 4.624165116053319,
                         "startLat": 51.99900160775284,
                         "maxThreshold": 5.25,
-                        "minThreshold": -9999
+                        "minThreshold": 0.001
                     },
                     "defaultFeatureType": "flooding",
                     "defaultLegendProperty": "h",
-                    "isDynamic": true,
-                    "gui": {},
-                    "tags": []
-                },
-                {
-                    "id": "cloudsim",
-                    "title": "Gaswolk",
-                    "description": "Gaswolk bij Ahoy.",
-                    "type": "grid",
-                    "renderType": "gridlayer",
-                    "url": "/api/layers/cloudsim",
-                    "typeUrl": "/api/resources/cloudsimtypes",
-                    "opacity": 75,
-                    "dataSourceParameters": {
-                        "propertyName": "c",
-                        "gridType": "esri",
-                        "projection": "WGS84",
-                        "contourLevels": [
-                            0.00001,
-                            0.0001,
-                            0.001,
-                            0.01
-                        ],
-                        "skipLines": 6,
-                        "columns": 101,
-                        "rows": 51,
-                        "noDataValue": -1,
-                        "deltaLon": 0.0014584288488676631,
-                        "deltaLat": -0.0008877224387042511,
-                        "startLon": 4.487947,
-                        "startLat": 51.882756,
-                        "legend": {
-                            "id": "Concentration",
-                            "visualAspect": "fillColor",
-                            "description": "Concentration [mg/m3]",
-                            "legendKind": "interpolated",
-                            "legendEntries": [
-                                {
-                                    "label": "0",
-                                    "value": 0,
-                                    "color": "#ffbc8f"
-                                },
-                                {
-                                    "label": "0.00001",
-                                    "value": 0.00001,
-                                    "color": "#eb6d00"
-                                },
-                                {
-                                    "label": "0.0001",
-                                    "value": 0.0001,
-                                    "color": "#8f4300"
-                                },
-                                {
-                                    "label": "0.001",
-                                    "value": 0.001,
-                                    "color": "#6b2900"
-                                },
-                                {
-                                    "label": ">0.01",
-                                    "value": 0.01,
-                                    "color": "#3d1700"
-                                }
-                            ]
-                        }
-                    },
-                    "defaultFeatureType": "cloud",
-                    "defaultLegendProperty": "c",
                     "isDynamic": true,
                     "gui": {},
                     "tags": []
@@ -666,7 +637,7 @@
             },
             "clustering": true,
             "clusterLevel": 8,
-            "layers": [                
+            "layers": [
                 {
                     "id": "powerstations",
                     "languages": {
@@ -788,7 +759,6 @@
                         }
                     },
                     "type": "grid",
-                    
                     "renderType": "gridlayer",
                     "showFeatureNotifications": false,
                     "url": "/api/layers/cellcoverage",
@@ -868,43 +838,6 @@
             ]
         },
         {
-            "id": "8cc47763-7f29-4fa7-05af-901a08bc4569",
-            "title": "Crowdtasker",
-            "languages": {
-                "en": {
-                    "description": "Crowdtasker allows volunteers to help in crisis situations."
-                },
-                "nl": {
-                    "description": "Crowdtasker biedt vrijwilligers de mogelijkheid om te helpen tijdens crisis situaties."
-                }
-            },
-            "clustering": true,
-            "clusterLevel": 10,
-            "layers": [
-                {
-                    "id": "crowdtasker",
-                    "title": "Crowdtasker",
-                    "languages": {
-                        "en": {
-                            "description": "Crowdtasker allows volunteers to help in crisis situations."
-                        },
-                        "nl": {
-                            "description": "Crowdtasker biedt vrijwilligers de mogelijkheid om te helpen tijdens crisis situaties."
-                        }
-                    },
-                    "type": "dynamicgeojson",
-                    "renderType": "geojson",
-                    "showFeatureNotifications": true,
-                    "url": "/crowdtasker",
-                    "typeUrl": "/data/resourceTypes/crowdtaskertypes.json",
-                    "opacity": 90,
-                    "isDynamic": true,
-                    "gui": {},
-                    "tags": []
-                }
-            ]
-        },
-        {
             "id": "761231565-7f29-4fa7-05af-901a08bc4444",
             "languages": {
                 "en": {
@@ -914,123 +847,15 @@
                     "title": "Overige lagen"
                 }
             },
-            "clustering": false,            
+            "clustering": false,
             "layers": [
-                {
-                    "id": "morning_north",
-                    "title": "Morning sectors",
-                    "description": "",
-                    "type": "geojson",
-                    "renderType": "geojson",
-                    "heatmapItems": null,
-                    "url": "data/layers/morning_north.json",
-                    "typeUrl": "data/resourceTypes/resources.json",
-                    "opacity": 75,
-                    "defaultFeatureType": "gemeente",
-                    "isDynamic": false,
-                    "timeAware": false
-                },
-                {
-                    "id": "afternoon_south",
-                    "title": "Afternoon sectors",
-                    "description": "",
-                    "type": "geojson",
-                    "renderType": "geojson",
-                    "heatmapItems": null,
-                    "url": "data/layers/afternoon_south.json",
-                    "typeUrl": "data/resourceTypes/resources.json",
-                    "opacity": 75,
-                    "defaultFeatureType": "gemeente",
-                    "isDynamic": false,
-                    "timeAware": false
-                },
-                {
-                    "id": "floodsim_d0",
-                    "title": "Expected water height",
-                    "description": "",
-                    "type": "grid",
-                    "renderType": "gridlayer",
-                    "heatmapItems": null,
-                    "url": "/data/layers/dmax_mask_24u.asc",
-                    "typeUrl": "/api/resources/floodsimtypes",
-                    "opacity": 75,
-                    "dataSourceParameters": {
-                        "propertyName": "h",
-                        "gridType": "esri",
-                        "projection": "WGS84",
-                        "contourLevels": [
-                            0.1,
-                            0.5,
-                            1,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "skipLines": 6,
-                        "columns": 380,
-                        "rows": 206,
-                        "deltaLon": 0.0014584288488676631,
-                        "deltaLat": -0.0008877224387042511,
-                        "noDataValue": -999.9990234375,
-                        "startLon": 4.624165116053319,
-                        "startLat": 51.99900160775284,
-                        "maxThreshold": 5.25,
-                        "minThreshold": 0
-                    },
-                    "defaultFeatureType": "flooding",
-                    "defaultLegendProperty": "h",
-                    "isDynamic": true,
-                    "gui": {},
-                    "tags": []
-                },
-                {
-                    "id": "floodsim_dmax",
-                    "title": "Maximum water height",
-                    "description": "Dmax",
-                    "type": "grid",
-                    "renderType": "gridlayer",
-                    "heatmapItems": null,
-                    "url": "/data/layers/dm1maxd0.asc",
-                    "typeUrl": "/api/resources/floodsimtypes",
-                    "opacity": 75,
-                    "dataSourceParameters": {
-                        "propertyName": "h",
-                        "gridType": "esri",
-                        "projection": "WGS84",
-                        "contourLevels": [
-                            0.1,
-                            0.5,
-                            1,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "skipLines": 6,
-                        "columns": 380,
-                        "rows": 206,
-                        "deltaLon": 0.0014584288488676631,
-                        "deltaLat": -0.0008877224387042511,
-                        "noDataValue": -999.9990234375,
-                        "startLon": 4.624165116053319,
-                        "startLat": 51.99900160775284,
-                        "maxThreshold": 5.25,
-                        "minThreshold": 0
-                    },
-                    "defaultFeatureType": "flooding",
-                    "defaultLegendProperty": "h",
-                    "isDynamic": true,
-                    "gui": {},
-                    "tags": []
-                },
                 {
                     "id": "wijk",
                     "title": "Wijken",
                     "type": "geojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": false,
-                    "url": "data/layers/capped_Wijk_2015.json",
+                    "url": "data/layers/buurt.geojson",
                     "typeUrl": "data/resourceTypes/resources.json",
                     "defaultFeatureType": "wijk",
                     "opacity": 70,
@@ -1045,7 +870,7 @@
                     "type": "geojson",
                     "renderType": "geojson",
                     "showFeatureNotifications": false,
-                    "url": "data/layers/capped_Buurt_2015.json",
+                    "url": "data/layers/wijk.geojson",
                     "typeUrl": "data/resourceTypes/resources.json",
                     "defaultFeatureType": "buurt",
                     "opacity": 70,
@@ -1053,6 +878,34 @@
                     "isDynamic": false,
                     "gui": {},
                     "tags": []
+                },
+                {
+                    "id": "ambassade",
+                    "title": "Ambassades en consulaten",
+                    "description": "Updated 20.03.2016",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/ambassades.geojson",
+                    "typeUrl": "data/resourceTypes/ambassades.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "ambassade",
+                    "isDynamic": false,
+                    "timeAware": false
+                },
+                {
+                    "id": "gemeentehuizen",
+                    "title": "Gemeentehuizen",
+                    "description": "Updated 20.03.2016",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/gemeentehuizen.geojson",
+                    "typeUrl": "data/resourceTypes/gemeentehuizen.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "gemeentehuizen",
+                    "isDynamic": false,
+                    "timeAware": false
                 }
             ]
         }

@@ -348,8 +348,8 @@ export class CriticalObjectSim extends SimSvc.SimServiceManager {
             }
             let co = JSON.parse(data.toString());
             this.criticalObjectsLayer = this.createNewLayer('criticalobjects', 'Kwetsbare objecten', co.features);
-            this.criticalObjectsLayer.features.forEach(f => {
-                if (!f.id) f.id = csweb.newGuid();
+            this.criticalObjectsLayer.features.forEach((f, ind) => {
+                f.id = `crit_obj_${ind}`;
                 if (f.geometry.type !== 'Point') return;
                 this.setFeatureState(f, SimSvc.InfrastructureState.Ok);
                 this.criticalObjects.push(f);
