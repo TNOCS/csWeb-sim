@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "X": 131246, "Y": 496514, "X-nav": 131267, "Y-nav": 496528, "BAG Id": "0852010000006233", "Organisati": "VZA", "LOC_TYPE": "Ambulancepost", "LOC_NAAM": "VZA Monnickendam", "LOC_STRAAT": "Swaensborch", "Huisnr": "11", "Postcode": "1141 VZ", "Plaats": "Monnickendam", "GEM": "Waterland", "Regio": 11, "Website": "www.vza.nl", "Telefoon": "020-5709500", "CODE": null, "BIJZONDERH": "Imergis" }, "geometry": { "type": "Point", "coordinates": [ 5.0377393, 52.4558706 ] } },
+{ "type": "Feature", "properties": { "X": 116902, "Y": 496110, "X-nav": 116887, "Y-nav": 496140, "BAG Id": "0479010000062316", "Organisati": "VZA", "LOC_TYPE": "Ambulancepost", "LOC_NAAM": "VZA Zaandam", "LOC_STRAAT": "Heijermansstraat", "Huisnr": "76", "Postcode": "1502 DR", "Plaats": "Zaandam", "GEM": "Zaanstad", "Regio": 11, "Website": "www.vza.nl", "Telefoon": "020-5709500", "CODE": null, "BIJZONDERH": "Imergis" }, "geometry": { "type": "Point", "coordinates": [ 4.8267663, 52.4514301 ] } },
+{ "type": "Feature", "properties": { "X": 122453, "Y": 486158, "X-nav": 122341, "Y-nav": 486157, "BAG Id": "0363010000755223", "Organisati": "VZA", "LOC_TYPE": "Ambulancepost", "LOC_NAAM": "GGD Amsterdam", "LOC_STRAAT": "Nieuwe Achtergracht", "Huisnr": "100", "Postcode": "1018 WT", "Plaats": "Amsterdam", "GEM": "Amsterdam", "Regio": 13, "Website": "www.vza.nl", "Telefoon": "020-5709500", "CODE": null, "BIJZONDERH": "Imergis" }, "geometry": { "type": "Point", "coordinates": [ 4.9093864, 52.3623469 ] } },
+{ "type": "Feature", "properties": { "X": 118777, "Y": 484601, "X-nav": 118785, "Y-nav": 484625, "BAG Id": "0363010001957897", "Organisati": "VZA", "LOC_TYPE": "Ambulancepost", "LOC_NAAM": "VZA Amsterdam", "LOC_STRAAT": "Karperweg", "Huisnr": "19", "Postcode": "1075 LB", "Plaats": "Amsterdam", "GEM": "Amsterdam", "Regio": 13, "Website": "www.vza.nl", "Telefoon": "020-5709500", "CODE": null, "BIJZONDERH": "Imergis" }, "geometry": { "type": "Point", "coordinates": [ 4.8555894, 52.3481236 ] } }
+]
+}

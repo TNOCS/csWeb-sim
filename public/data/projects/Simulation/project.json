@@ -724,7 +724,14 @@
         },
         {
             "id": "7b947763-7f29-4fa7-05af-901a08bc62bb",
-            "title": "Communicatie",
+            "languages": {
+                "en": {
+                    "title": "Communication"
+                },
+                "nl": {
+                    "title": "Communicatie"
+                }
+            },
             "clustering": true,
             "clusterLevel": 10,
             "layers": [
@@ -732,10 +739,10 @@
                     "id": "communicationobjects",
                     "languages": {
                         "en": {
-                            "title": "Cell towers"
+                            "title": "C2000 Cell towers"
                         },
                         "nl": {
-                            "title": "Zendmasten"
+                            "title": "C2000 Zendmasten"
                         }
                     },
                     "type": "dynamicgeojson",
@@ -749,13 +756,32 @@
                     "tags": []
                 },
                 {
+                    "id": "celltowers",
+                    "languages": {
+                        "en": {
+                            "title": "GSM Cell towers"
+                        },
+                        "nl": {
+                            "title": "GSM Zendmasten"
+                        }
+                    },
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/celltowers.json",
+                    "typeUrl": "/api/resources/comm_objects.json",
+                    "opacity": 75,
+                    "isDynamic": false,
+                    "timeAware": false
+                },
+                {
                     "id": "cellcoverage",
                     "languages": {
                         "en": {
-                            "title": "Coverage"
+                            "title": "C2000 Coverage"
                         },
                         "nl": {
-                            "title": "Dekking"
+                            "title": "C2000 Dekking"
                         }
                     },
                     "type": "grid",
@@ -878,6 +904,61 @@
                     "isDynamic": false,
                     "gui": {},
                     "tags": []
+                },
+                {
+                    "id": "primaire_waterlopen",
+                    "title": "Primaire waterlopen",
+                    "description": "HHNK",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/primaire_waterlopen_hhnk.json_wgs84.geojson",
+                    "typeUrl": "data/resourceTypes/POINT_FEATURE.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "waterloop",
+                    "isDynamic": false,
+                    "timeAware": false
+                },
+                {
+                    "id": "poldergemalen",
+                    "title": "Poldergemalen",
+                    "description": "HHNK",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/poldergemalen_hhnk.json_wgs84.geojson",
+                    "typeUrl": "data/resourceTypes/POINT_FEATURE.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "poldergemaal",
+                    "isDynamic": false,
+                    "timeAware": false
+                },
+                {
+                    "id": "rioolgemalen",
+                    "title": "Rioolgemalen",
+                    "description": "HHNK",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "url": "data/layers/rioolgemalen_hhnk.json_wgs84.geojson",
+                    "typeUrl": "data/resourceTypes/POINT_FEATURE.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "rioolgemaal",
+                    "isDynamic": false,
+                    "timeAware": false
+                },
+                {
+                    "id": "RWZI",
+                    "title": "Rioolwaterzuiveringsinstallatie",
+                    "description": "HHNK",
+                    "type": "geojson",
+                    "renderType": "geojson",
+                    "heatmapItems": null,
+                    "url": "data/layers/RWZI_hhnk.json_wgs84.geojson",
+                    "typeUrl": "data/resourceTypes/POINT_FEATURE.json",
+                    "opacity": 75,
+                    "defaultFeatureType": "RWZI",
+                    "isDynamic": false,
+                    "timeAware": false
                 },
                 {
                     "id": "ambassade",

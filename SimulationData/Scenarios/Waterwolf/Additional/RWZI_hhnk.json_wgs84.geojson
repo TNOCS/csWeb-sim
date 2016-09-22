@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                                                                                
+"features": [
+{ "type": "Feature", "properties": { "OBJECTID": 1, "ZRWIDENT": "ZRW-MB-0013", "ZRWNAAM": "rwzi Katwoude", "CN_INTWIS_OBJECTCODE": "ZRW-MB-0013", "LINK_INTWISCODE": "http:\/\/smarteam.hhnk.nl\/straitPortalExpress\/OBJECT\/TreeResults.aspx?CN_INTWIS_OBJECTCODE=ZRW-MB-0013&Attributes=CN_OBJECTKEY" }, "geometry": { "type": "Point", "coordinates": [ 5.03289, 52.482509 ] } },
+{ "type": "Feature", "properties": { "OBJECTID": 2, "ZRWIDENT": "ZRW-MB-0015", "ZRWNAAM": "rwzi Zaandam-Oost", "CN_INTWIS_OBJECTCODE": "ZRW-MB-0015", "LINK_INTWISCODE": "http:\/\/smarteam.hhnk.nl\/straitPortalExpress\/OBJECT\/TreeResults.aspx?CN_INTWIS_OBJECTCODE=ZRW-MB-0015&Attributes=CN_OBJECTKEY" }, "geometry": { "type": "Point", "coordinates": [ 4.858924, 52.430428 ] } },
+{ "type": "Feature", "properties": { "OBJECTID": 3, "ZRWIDENT": "ZRW-MB-0017", "ZRWNAAM": "rwzi Westpoort", "CN_INTWIS_OBJECTCODE": null, "LINK_INTWISCODE": null }, "geometry": { "type": "Point", "coordinates": [ 4.801058, 52.411205 ] } }
+]
+}
