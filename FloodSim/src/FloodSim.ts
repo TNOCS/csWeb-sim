@@ -117,6 +117,7 @@ export class FloodSim extends SimSvc.SimServiceManager {
             startTime: null,
             layer: layer
         }
+        layer.quickRefresh = true;
         this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
     }
 

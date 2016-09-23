@@ -20,7 +20,6 @@ public/data/layers/
 public/data/resourceTypes/
 public/data/backup/
 test.js
-*.geojson
 CellCoverageSim/**/*.js
 CloudSim/**/*.js
 CommunicationSim/**/*.js

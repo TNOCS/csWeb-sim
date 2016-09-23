@@ -23,7 +23,8 @@ Winston.remove(Winston.transports.Console);
 Winston.add(Winston.transports.Console, <Winston.ConsoleTransportOptions>{
     label: 'all',
     colorize: true,
-    prettyPrint: true
+    prettyPrint: true,
+    level: 'warn'
 });
 
 var favicon = require('serve-favicon');
@@ -86,7 +87,7 @@ var floodSim = new FloodSim.FloodSim('cs', 'FloodSim', false, <csweb.IApiManager
 floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () => {
     // floodSim.addConnector('rest', new RestAPI.RestAPI(server), {});
     floodSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
-    floodSim.addConnector('socketio', new csweb.SocketIOAPI(cm), {});
+    // floodSim.addConnector('socketio', new csweb.SocketIOAPI(cm), {});
     // floodSim.addConnector('file', new FileStorage.FileStorage(path.join(path.resolve(__dirname), './FloodSim/public/data/')), {});
     // floodSim.start();
 });
@@ -170,6 +171,7 @@ var cellCoverageSim = new CellCoverageSim.CellCoverageSim('cs', 'CellCoverageSim
 });
 cellCoverageSim.init(path.join(path.resolve(__dirname), './CellCoverageSim/public/data'), () => {
     cellCoverageSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
+    // cellCoverageSim.addConnector('socketio', new csweb.SocketIOAPI(cm), {});    
 });
 
 var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,

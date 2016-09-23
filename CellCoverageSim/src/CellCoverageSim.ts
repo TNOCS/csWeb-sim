@@ -20,7 +20,7 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
     private coverageLayer: csweb.ILayer;
     private communicationObjects: csweb.Feature[] = [];
     /** Dictionary of feature id's and their status (to prevent updating the same object twice) */
-    private objectStatuses: {[id: string] : SimSvc.InfrastructureState} = {};
+    private objectStatuses: { [id: string]: SimSvc.InfrastructureState } = {};
     private upcomingEventTime: number; // milliseconds
     private gridParams: csweb.IGridDataSourceParameters = <csweb.IGridDataSourceParameters>{};
     private gridData: number[][] = [];
@@ -45,6 +45,8 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
             if (!layer.features) return;
             Winston.info(`CellCovSim: Comm objects layer received. ID: ${changed.id} Type:${changed.type}`);
             this.communicationObjects = layer.features;
+            this.isInitialized = false;
+            this.initCoverageArea();
             this.initCommObjects();
             if (this.isInitialized) {
                 this.coverageLayer.data = this.stringifyGrid();
@@ -81,7 +83,7 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
     }
 
     private initCoverageArea(): void {
-        if (!this.gridParams || this.isInitialized) return;
+        if (_.isEmpty(this.gridParams) || this.isInitialized) return;
         let nRows = this.gridParams.rows;
         let nCols = this.gridParams.columns;
 
@@ -98,16 +100,16 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
     }
 
     private initCommObjects(): void {
-        Winston.error('initCommObjects ' + this.isInitialized + ' objs: ' + this.communicationObjects.length);
+        Winston.info('initCommObjects ' + this.isInitialized + ' objs: ' + this.communicationObjects.length);
         for (let i = 0; i < this.communicationObjects.length; i++) {
             var co = this.communicationObjects[i];
-            this.objectStatuses[co.id] = this.getFeatureState(co); 
+            this.objectStatuses[co.id] = this.getFeatureState(co);
             this.updateGrid(co, true);
         }
     }
 
     private updateGrid(f: csweb.Feature, init: boolean = false) {
-        if (!this.isInitialized) return;
+        if (!this.isInitialized) this.initCoverageArea();
         let fLoc = f.geometry.coordinates;
         let fx = Math.floor((fLoc[0] - this.gridParams.startLon) / this.gridParams.deltaLon);
         let fy = Math.floor((fLoc[1] - this.gridParams.startLat) / this.gridParams.deltaLat);
@@ -131,16 +133,19 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
     */
     private calculateCoverageStamp(maxRadius: number) {
         if (this.isInitialized) return;
-        var horizCells = Math.abs(Math.floor(maxRadius / this.gridParams.deltaLon));
+        var latLonDistance = csweb.GeoExtensions.convertDegreesToMeters(this.gridParams.startLat);
+        var latLonFactor = latLonDistance.longitudeLength / latLonDistance.latitudeLength;
+        var horizCells = Math.abs(Math.floor(maxRadius / (this.gridParams.deltaLon * latLonFactor)));
         var vertCells = Math.abs(Math.floor(maxRadius / this.gridParams.deltaLat));
-        var cellDiam = Math.abs(this.gridParams.deltaLat * this.gridParams.deltaLon);
+        var cellDiam = Math.abs(this.gridParams.deltaLat * this.gridParams.deltaLon * latLonFactor);
         this.coverageStamp = [];
 
         console.log('Coverage stamp radius: ' + vertCells + ' x ' + horizCells);
         for (var i = 0; i < vertCells; i++) {
             this.coverageStamp[i] = [];
             for (var j = 0; j < horizCells; j++) {
-                var radius = Math.sqrt(i * i * cellDiam + j * j * cellDiam);
+                var radius = Math.sqrt(i * i * this.gridParams.deltaLat * this.gridParams.deltaLat 
+                                            + j * j * this.gridParams.deltaLon * latLonFactor * this.gridParams.deltaLon * latLonFactor);
                 this.coverageStamp[i][j] = (radius < maxRadius) ? 1 : 0;
             }
         }
@@ -174,56 +179,15 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
         return grid.join('\n');
     }
 
-    private blackout(f: csweb.Feature) {
-        var failedObjects = this.checkBlackoutAreas(f);
-    }
-
-    private checkBlackoutAreas(f: csweb.Feature) {
-        // var totalBlackoutArea = this.concatenateBlackoutAreas(f);
-        var totalBlackoutArea = f.geometry;
-        var failedObjects: string[] = [];
-
-        // Check if CO is in blackout area
-        for (let i = 0; i < this.communicationObjects.length; i++) {
-            var co = this.communicationObjects[i];
-            var state = this.getFeatureState(co);
-            if (state === SimSvc.InfrastructureState.Failed) {
-                failedObjects.push(co.properties['Name']);
-                continue;
-            }
-            // var inBlackout = this.pointInsideMultiPolygon(co.geometry.coordinates, totalBlackoutArea.coordinates);
-            var inBlackout = this.pointInsidePolygon(co.geometry.coordinates, totalBlackoutArea.coordinates);
-            if (inBlackout) {
-                this.setFeatureState(co, SimSvc.InfrastructureState.Failed, SimSvc.FailureMode.NoBackupPower, true);
-                failedObjects.push(co.properties['Name']);
-            }
-        }
-        return failedObjects;
-    }
-
-    private convertLayerToGrid(layer: csweb.ILayer) {
-        var gridParams = <csweb.IGridDataSourceParameters>{};
-        csweb.IsoLines.convertEsriHeaderToGridParams(layer, gridParams);
-        var gridData = csweb.IsoLines.convertDataToGrid(layer, gridParams);
-
-        return function getWaterLevel(pt: number[]): number {
-            var col = Math.floor((pt[0] - gridParams.startLon) / gridParams.deltaLon);
-            if (col < 0 || col >= gridData[0].length) return -1;
-            var row = Math.floor((pt[1] - gridParams.startLat) / gridParams.deltaLat);
-            if (row < 0 || row >= gridData.length) return -1;
-            var waterLevel = gridData[row][col];
-            return waterLevel;
-        }
-    }
-
     /** Reset the state to the original state. */
     private reset() {
         this.deleteFilesInFolder(path.join(__dirname, '../public/data/layers'));
         this.deleteFilesInFolder(path.join(__dirname, '../public/data/keys'));
         this.isInitialized = false;
 
-        this.communicationObjects = [];
+        // this.communicationObjects = [];
         this.objectStatuses = {};
+        this.gridData = [];
         // Copy original csweb layers to dynamic layers
         var coverageFile = path.join(this.sourceFolder, 'coveragesim.asc');
         fs.readFile(coverageFile, 'utf8', (err, data) => {
@@ -254,26 +218,6 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
         csweb.IsoLines.convertEsriHeaderToGridParams(this.coverageLayer, this.gridParams);
         this.gridData = [];
         this.isInitialized = false;
-    }
-
-    /** Set the state and failure mode of a feature, optionally publishing it too. */
-    private setFeatureState(feature: csweb.Feature, state: SimSvc.InfrastructureState, failureMode: SimSvc.FailureMode = SimSvc.FailureMode.None, publish: boolean = false) {
-        feature.properties['state'] = state;
-        feature.properties['failureMode'] = failureMode;
-        if (!publish) return;
-        // Publish feature update
-        this.updateFeature(this.coverageLayer.id, feature, <csweb.ApiMeta>{}, () => { });
-        // Publish PowerSupplyArea layer
-        // if (state === SimSvc.InfrastructureState.Failed && feature.properties.hasOwnProperty('contour')) {
-        //     var contour = new csweb.Feature();
-        //     contour.id = csweb.newGuid();
-        //     contour.properties = {
-        //         Name: 'Contour area',
-        //         featureTypeId: 'AffectedArea'
-        //     };
-        //     contour.geometry = JSON.parse(feature.properties['contour']);
-        //     this.addFeature(this.coverageLayer.id, contour, <csweb.ApiMeta>{}, () => { });
-        // }
     }
 
     private getFeatureState(feature: csweb.Feature) {
@@ -311,6 +255,7 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
      * Create and publish the layer.
      */
     private publishLayer(layer: csweb.ILayer) {
+        layer.quickRefresh = true;
         this.addUpdateLayer(layer, <csweb.ApiMeta>{}, () => { });
     }
 
@@ -319,7 +264,6 @@ export class CellCoverageSim extends SimSvc.SimServiceManager {
         this.coverageLayer.data = this.stringifyGrid();
         this.publishLayer(this.coverageLayer);
     }, 500, { leading: false, trailing: true });
-
 
     /**
      * pointInsidePolygon returns true if a 2D point lies within a polygon of 2D points
