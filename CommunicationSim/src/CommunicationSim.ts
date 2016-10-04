@@ -21,6 +21,7 @@ export class CommunicationSim extends SimSvc.SimServiceManager {
     private communicationObjectsLayer: csweb.ILayer;
     private communicationObjects: csweb.Feature[] = [];
     private upcomingEventTime: number; // milliseconds
+    private featureUpdates: csweb.IChangeEvent[];
 
     constructor(namespace: string, name: string, public isClient = false, public options: csweb.IApiManagerOptions = <csweb.IApiManagerOptions>{}) {
         super(namespace, name, isClient, options);
@@ -239,7 +240,7 @@ export class CommunicationSim extends SimSvc.SimServiceManager {
         feature.properties['failureMode'] = failureMode;
         if (!publish) return;
         // Publish feature update
-        this.updateFeature(this.communicationObjectsLayer.id, feature, <csweb.ApiMeta>{}, () => { });
+        this.prepareFeatureUpdate(this.communicationObjectsLayer.id, feature, <csweb.ApiMeta>{}, () => { });
         // Publish PowerSupplyArea layer
         // if (state === SimSvc.InfrastructureState.Failed && feature.properties.hasOwnProperty('contour')) {
         //     var contour = new csweb.Feature();
@@ -251,6 +252,16 @@ export class CommunicationSim extends SimSvc.SimServiceManager {
         //     contour.geometry = JSON.parse(feature.properties['contour']);
         //     this.addFeature(this.communicationObjectsLayer.id, contour, <csweb.ApiMeta>{}, () => { });
         // }
+    }
+
+    private prepareFeatureUpdate(id: string, f: csweb.Feature, meta: csweb.ApiMeta, cb: Function) {
+        this.featureUpdates.push({ type: csweb.ChangeType.Update, id: f.id, value: f });
+    }
+
+    private updateFeatureBatch() {
+        if (this.featureUpdates.length === 0) return;
+        this.addUpdateFeatureBatch(this.communicationObjectsLayer.id, this.featureUpdates, <csweb.ApiMeta>{}, () => { });
+        this.featureUpdates.length = 0;
     }
 
     private getFeatureState(feature: csweb.Feature) {

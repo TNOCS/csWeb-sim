@@ -167,7 +167,7 @@ export class FloodSim extends SimSvc.SimServiceManager {
             files.forEach(f => {
                 var ext = path.extname(f);
                 var file = path.join(scenarioFolder, f);
-                if (ext !== '.asc') return;
+                if (ext !== '.asc' || (+path.basename(f, ext) < 0)) return;
                 this.addToScenarios(scenario, file);
             });
         });

@@ -36,6 +36,7 @@
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "moment": "registry:dt/moment#2.11.1+20160829143156",
     "mongodb": "github:rinzeb/DefinitelyTyped/mongodb/mongodb.d.ts#09e844c1ef5a2b4b5bda6c672453cc7f1fdfe0c6",
+    "mosca": "github:rinzeb/DefinitelyTyped/mosca/mosca.d.ts#5fb33718ed82c16ed7b49046fecc726b70d5a3a0",
     "mqtt": "registry:dt/mqtt#0.0.0+20160317120654",
     "mqtt-router": "github:rinzeb/DefinitelyTyped/mqtt-router/mqtt-router.d.ts#09e844c1ef5a2b4b5bda6c672453cc7f1fdfe0c6",
     "node": "registry:dt/node#6.0.0+20160830141956",

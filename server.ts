@@ -4,6 +4,7 @@ import express = require('express');
 import http = require('http');
 import path = require('path');
 import Winston = require('winston');
+import mosca = require('mosca');
 
 import * as csweb from "csweb";
 
@@ -24,12 +25,15 @@ Winston.add(Winston.transports.Console, <Winston.ConsoleTransportOptions>{
     label: 'all',
     colorize: true,
     prettyPrint: true,
-    level: 'warn'
+    level: 'info'
 });
 
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser')
 var server = express();
+
+// var mqttServer = new mosca.Server({ port: 1883 });   //here we start mosca
+// mqttServer.on('ready', () => { Winston.info('Mosca MQTT server started.') });
 
 var httpServer = require('http').Server(server);
 var cm = new csweb.ConnectionManager(httpServer);
@@ -48,7 +52,7 @@ server.use(bodyParser.json({ limit: '25mb' })); // support json encoded bodies
 server.use(bodyParser.urlencoded({ limit: '25mb', extended: true })); // support encoded bodies
 
 // CORRS: see http://stackoverflow.com/a/25148861/319711
-server.use(function(req, res, next) {
+server.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost');
     res.header('Access-Control-Allow-Methods', 'GET');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
@@ -81,7 +85,7 @@ var prefix = SimSvc.SimServiceManager.namespace;
 
 /** Start FloodSim server */
 var floodSim = new FloodSim.FloodSim('cs', 'FloodSim', false, <csweb.IApiManagerOptions>{
-    server: `${csweb.getIPAddress() }:${port}`,
+    server: `${csweb.getIPAddress()}:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/keys/sim/floodSimCmd']
 });
 floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () => {
@@ -106,8 +110,8 @@ floodSim.init(path.join(path.resolve(__dirname), './FloodSim/public/data'), () =
 
 /** Start CommunicationSim server */
 var communicationSim = new CommunicationSim.CommunicationSim('cs', 'CommunicationSim', false, <csweb.IApiManagerOptions>{
-    server: `${csweb.getIPAddress() }:${port}`,
-    mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#', 'cs/layers/communicationobjects/feature/#']
+    server: `${csweb.getIPAddress()}:${port}`,
+    mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#', 'cs/layers/communicationobjects/feature/#', 'cs/layers/flooding.scen.scenario1']
 });
 communicationSim.init(path.join(path.resolve(__dirname), './CommunicationSim/public/data'), () => {
     // communicationSim.addConnector('rest', new RestAPI.RestAPI(server), {});
@@ -118,7 +122,7 @@ communicationSim.init(path.join(path.resolve(__dirname), './CommunicationSim/pub
 
 /** Start ElectricalNetworkSim server */
 var electricalNetworkSim = new ElectricalNetworkSim.ElectricalNetworkSim('cs', 'ElectricalNetworkSim', false, <csweb.IApiManagerOptions>{
-    server: `${csweb.getIPAddress() }:${port}`,
+    server: `${csweb.getIPAddress()}:${port}`,
     mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/floodsim', 'cs/layers/powerstations/feature/#']
 });
 electricalNetworkSim.init(path.join(path.resolve(__dirname), './ElectricalNetworkSim/public/data'), () => {
@@ -167,7 +171,7 @@ hazardousObjectSim.init(path.join(path.resolve(__dirname), './HazardousObjectSim
 /** Start CellCoverage server */
 var cellCoverageSim = new CellCoverageSim.CellCoverageSim('cs', 'CellCoverageSim', false, <csweb.IApiManagerOptions>{
     server: `${csweb.getIPAddress()}:${port}`,
-    mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/communicationobjects/feature/#','cs/layers/communicationobjects']
+    mqttSubscriptions: ['cs/keys/Sim/SimTime', 'cs/layers/communicationobjects/feature/#', 'cs/layers/communicationobjects']
 });
 cellCoverageSim.init(path.join(path.resolve(__dirname), './CellCoverageSim/public/data'), () => {
     cellCoverageSim.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
@@ -186,7 +190,7 @@ var api = new SimMngr.SimulationManager('cs', 'SimulationManager', false,
         //'GasCloud': cloudSim
     },
     {
-        server: `${csweb.getIPAddress() }:${port}`,
+        server: `${csweb.getIPAddress()}:${port}`,
         simDataFolder: 'SimulationData',
         mqttSubscriptions: ['cs/layers/communicationobjects', 'cs/layers/cellcoverage', 'cs/layers/roadobjects', 'cs/layers/floodsim', 'cs/layers/cloudsim', 'cs/layers/powerstations', 'cs/layers/hazardousobjects', 'cs/layers/criticalobjects',
             'cs/layers/roadobjects/feature/#', 'cs/layers/powerstations/feature/#', 'cs/layers/criticalobjects/feature/#', 'cs/layers/hazardousobjects/feature/#', 'cs/layers/communicationobjects/feature/#', 'cs/keys/#']
@@ -196,12 +200,13 @@ api.init(path.join(path.resolve(__dirname), 'public/data'), () => {
     api.addConnector('socketio', new csweb.SocketIOAPI(cm), {});
     api.addConnector('mqtt', new csweb.MqttAPI('localhost', 1883), {});
     api.addConnector('file', new csweb.FileStorage(path.join(path.resolve(__dirname), 'public/data/')), {});
+    // api.addConnector('kafka', new csweb.KafkaAPI('134.221.20.239', 3333, <csweb.KafkaOptions>{ consumers: ["flooding.scen.scenario1"], consumer: "csweb-sim", producers: ["flooding.scen.scenario1"] }), {});
     api.start();
 });
 
 httpServer.listen(server.get('port'), () => {
     Winston.info('Express server listening on port ' + server.get('port'));
-    
+
     // var restSourceOptions: csweb.IRestDataSourceSettings = {
     //     converterFile: path.join(__dirname, './crowdtasker.js'),
     //     pollIntervalSeconds: 60,
