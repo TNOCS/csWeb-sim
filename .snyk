@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.0
+version: v1.7.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -11,3 +11,28 @@ patch:
         patched: '2017-02-18T10:10:46.080Z'
     - csweb > hypertimer > ws:
         patched: '2017-02-18T10:10:46.080Z'
+  'npm:ms:20170412':
+    - csweb > hypertimer > body-parser > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - hypertimer > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > socket.io-parser > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > socket.io-client > socket.io-parser > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - hypertimer > body-parser > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > hypertimer > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > engine.io > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > socket.io-adapter > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > socket.io-client > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
+    - csweb > socket.io > socket.io-client > engine.io-client > debug > ms:
+        patched: '2017-05-27T07:24:11.537Z'
