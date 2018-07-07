@@ -19,7 +19,8 @@
     "tsc:w": "./node_modules/.bin/tsc -w",
     "typings": "typings",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "npm run snyk-protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "csweb": "^0.3.1",
@@ -28,7 +29,7 @@
     "mosca": "^2.1.0",
     "setprototypeof": "^1.0.1",
     "winston": "^2.1.0",
-    "snyk": "^1.25.0"
+    "snyk": "^1.88.2"
   },
   "devDependencies": {
     "chokidar": "^1.2.0",
