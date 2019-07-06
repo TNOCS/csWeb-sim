@@ -28,7 +28,7 @@
     "mosca": "^2.1.0",
     "setprototypeof": "^1.0.1",
     "winston": "^2.1.0",
-    "snyk": "^1.25.0"
+    "snyk": "^1.192.3"
   },
   "devDependencies": {
     "chokidar": "^1.2.0",
